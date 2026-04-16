@@ -14,13 +14,13 @@ const Contact3DAnimation = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let w = canvas.width = 400;
-    let h = canvas.height = 400;
+    let w = canvas.width = 600;
+    let h = canvas.height = 600;
     
     // Group 1: Planet Points
     const planetPoints: { x: number, y: number, z: number, color: string }[] = [];
-    const planetCount = 300;
-    const planetRadius = 60;
+    const planetCount = 400;
+    const planetRadius = 110;
     for (let i = 0; i < planetCount; i++) {
         const phi = Math.acos(-1 + (2 * i) / planetCount);
         const theta = Math.sqrt(planetCount * Math.PI) * phi;
@@ -34,22 +34,22 @@ const Contact3DAnimation = () => {
 
     // Group 2: Saturn Rings
     const ringPoints: { x: number, y: number, z: number }[] = [];
-    const ringCount = 250;
+    const ringCount = 350;
     for (let i = 0; i < ringCount; i++) {
-        const r = 90 + Math.random() * 40;
+        const r = 160 + Math.random() * 70;
         const angle = Math.random() * Math.PI * 2;
         ringPoints.push({
             x: Math.cos(angle) * r,
-            y: (Math.random() - 0.5) * 4, // Thin ring depth
+            y: (Math.random() - 0.5) * 6, // Thin ring depth
             z: Math.sin(angle) * r
         });
     }
 
     // Group 3: Spacecrafts
     const ships = [
-        { angle: 0, r: 150, speed: 0.02, offsetZ: 20 },
-        { angle: Math.PI, r: 180, speed: 0.015, offsetZ: -30 },
-        { angle: Math.PI / 2, r: 130, speed: 0.025, offsetZ: 0 }
+        { angle: 0, r: 260, speed: 0.015, offsetZ: 30 },
+        { angle: Math.PI, r: 300, speed: 0.01, offsetZ: -40 },
+        { angle: Math.PI / 2, r: 220, speed: 0.02, offsetZ: 0 }
     ];
 
     let rotX = 0.5; // Tilted view
@@ -62,10 +62,9 @@ const Contact3DAnimation = () => {
       ctx.save();
       ctx.translate(w / 2, h / 2);
 
-      // Draw All items with depth sorting (approximate)
+      // Draw All items with depth sorting
       const all: any[] = [];
 
-      // Add Planet
       planetPoints.forEach(p => {
         let x = p.x; let y = p.y; let z = p.z;
         let x1 = x * Math.cos(rotY) - z * Math.sin(rotY);
@@ -75,7 +74,6 @@ const Contact3DAnimation = () => {
         all.push({ x: x1, y: y2, z: z2, type: 'planet', color: p.color });
       });
 
-      // Add Rings
       ringPoints.forEach(p => {
         let x = p.x; let y = p.y; let z = p.z;
         let x1 = x * Math.cos(rotY) - z * Math.sin(rotY);
@@ -85,7 +83,6 @@ const Contact3DAnimation = () => {
         all.push({ x: x1, y: y2, z: z2, type: 'ring' });
       });
 
-      // Update and Add Ships
       ships.forEach(s => {
         s.angle += s.speed;
         let x = Math.cos(s.angle) * s.r;
@@ -99,32 +96,31 @@ const Contact3DAnimation = () => {
         all.push({ x: x1, y: y2, z: z2, type: 'ship' });
       });
 
-      // Sort by Z (Depth)
       all.sort((a, b) => b.z - a.z);
 
       all.forEach(p => {
-        const perspective = 400 / (400 + p.z);
+        const perspective = 600 / (600 + p.z);
         const px = p.x * perspective;
         const py = p.y * perspective;
-        const alpha = (p.z + 150) / 300;
+        const alpha = (p.z + 200) / 400;
 
         ctx.beginPath();
         if (p.type === 'ship') {
-            ctx.arc(px, py, 3 * perspective, 0, Math.PI * 2);
+            ctx.arc(px, py, 4 * perspective, 0, Math.PI * 2);
             ctx.fillStyle = '#FE532D';
-            ctx.shadowBlur = 15;
+            ctx.shadowBlur = 20;
             ctx.shadowColor = '#FE532D';
         } else if (p.type === 'ring') {
-            ctx.arc(px, py, 0.8 * perspective, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${0.05 + alpha * 0.2})`;
+            ctx.arc(px, py, 1 * perspective, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${0.05 + alpha * 0.25})`;
             ctx.shadowBlur = 0;
         } else {
-            ctx.arc(px, py, 1.2 * perspective, 0, Math.PI * 2);
+            ctx.arc(px, py, 1.5 * perspective, 0, Math.PI * 2);
             ctx.fillStyle = p.color;
             ctx.shadowBlur = 0;
         }
         ctx.fill();
-        ctx.shadowBlur = 0; // Reset
+        ctx.shadowBlur = 0;
       });
 
       ctx.restore();
@@ -135,12 +131,12 @@ const Contact3DAnimation = () => {
   }, []);
 
   return (
-    <div style={{ marginTop: '2rem', marginLeft: '-100px' }}>
+    <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center', width: '100%', maxWidth: '600px' }}>
       <canvas 
         ref={canvasRef} 
         style={{ 
-          width: '400px', 
-          height: '400px',
+          width: '100%', 
+          aspectRatio: '1',
           maskImage: 'radial-gradient(circle, black 50%, transparent 80%)',
           WebkitMaskImage: 'radial-gradient(circle, black 50%, transparent 80%)'
         }} 
@@ -518,96 +514,117 @@ const projects = [
   { id: 'vertex', name: 'Vertex Capital', category: 'Fintech UX', year: '2023', color: '#f8f9fa', image: '/projects/vertex.png', desc: 'Redesigning the trading experience for 50,000+ active institutional investors.' },
 ];
 
-const ProjectCard = ({ project, index }: { project: typeof projects[0], index: number }) => {
+const ProjectRow = ({ project, index }: { project: typeof projects[0], index: number }) => {
   const [hovered, setHovered] = useState(false);
 
   return (
     <motion.div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      initial={{ opacity: 0, y: 60 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: index * 0.15 }}
+      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
       style={{
-        display: 'grid',
-        gridTemplateColumns: index % 2 === 0 ? '1fr 1fr' : '1fr 1fr',
-        gap: '0',
-        background: 'var(--glass-bg)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderRadius: '32px',
-        overflow: 'hidden',
+        width: '100%',
+        borderBottom: '1px solid var(--divider)',
+        position: 'relative',
         cursor: 'pointer',
-        border: '1px solid var(--glass-border)',
-        transition: 'all 0.4s ease',
-        boxShadow: hovered ? '0 40px 80px rgba(0,0,0,0.1)' : '0 4px 20px rgba(0,0,0,0.02)',
-        color: 'var(--text-color)'
+        padding: '3rem 0',
+        zIndex: hovered ? 10 : 1
       }}
     >
-      {/* Text Side */}
       <div style={{
-        padding: 'clamp(2.5rem, 4vw, 4rem)',
         display: 'flex',
-        flexDirection: 'column',
+        alignItems: 'baseline',
         justifyContent: 'space-between',
-        order: index % 2 === 0 ? 1 : 2,
-        minHeight: '420px'
+        width: '100%',
+        position: 'relative',
+        zIndex: 2
       }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
-            <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.2em', opacity: 0.4, fontWeight: 600 }}>{project.category}</span>
-            <span style={{ fontSize: '0.7rem', opacity: 0.25 }}>{project.year}</span>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '3rem' }}>
+          <span style={{ 
+            fontSize: '1rem', 
+            opacity: 0.3, 
+            fontFamily: 'var(--font-outfit)',
+            fontWeight: 700 
+          }}>
+            0{index + 1}
+          </span>
           <motion.h3
-            className="serif"
-            animate={{ color: hovered ? '#FE532D' : 'var(--text-color)' }}
-            transition={{ duration: 0.3 }}
+            animate={{ 
+              x: hovered ? 30 : 0,
+              color: hovered ? '#FE532D' : 'var(--text-color)'
+            }}
+            transition={{ type: 'spring', stiffness: 200, damping: 25 }}
             style={{
-              fontSize: 'clamp(2rem, 3.5vw, 3rem)',
-              lineHeight: 1.05,
-              letterSpacing: '-0.02em',
+              fontSize: 'clamp(2.5rem, 6vw, 6rem)',
+              fontWeight: 800,
+              lineHeight: 1,
+              letterSpacing: '-0.04em',
               margin: 0,
-              marginBottom: '1.5rem'
+              textTransform: 'none'
             }}
           >
             {project.name}
           </motion.h3>
-          <p style={{ fontSize: '1rem', lineHeight: 1.6, opacity: 0.6, maxWidth: '360px' }}>{project.desc}</p>
         </div>
-        <motion.div 
-          animate={{ x: hovered ? 8 : 0 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-          style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginTop: '2rem', color: 'var(--text-color)' }}
-        >
-          <span style={{ fontSize: '0.8rem', fontWeight: 600, letterSpacing: '0.05em' }}>View Case Study</span>
-          <motion.span 
-            animate={{ x: hovered ? 4 : 0 }}
-            style={{ fontSize: '1.1rem' }}
-          >
-            →
-          </motion.span>
-        </motion.div>
+
+        <div style={{ display: 'flex', gap: '3rem', alignItems: 'center', textAlign: 'right' }}>
+          <span style={{ 
+            fontSize: '0.85rem', 
+            textTransform: 'uppercase', 
+            letterSpacing: '0.15em', 
+            opacity: 0.4, 
+            fontWeight: 600,
+            display: 'block' 
+          }}>
+            {project.category}
+          </span>
+          <span style={{ 
+            fontSize: '0.85rem', 
+            opacity: 0.2, 
+            fontWeight: 600,
+            minWidth: '40px' 
+          }}>
+            {project.year}
+          </span>
+        </div>
       </div>
 
-      {/* Image Side */}
-      <motion.div
-        animate={{ scale: hovered ? 1.03 : 1 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 25 }}
-        style={{
-          position: 'relative',
-          overflow: 'hidden',
-          order: index % 2 === 0 ? 2 : 1,
-          minHeight: '420px'
-        }}
-      >
-        <Image 
-          src={project.image} 
-          alt={project.name} 
-          fill 
-          style={{ objectFit: 'cover', objectPosition: 'center' }} 
-        />
-      </motion.div>
+      {/* Floating Reveal Image */}
+      <AnimatePresence>
+        {hovered && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, rotate: -3 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            exit={{ opacity: 0, scale: 0.8, rotate: 3 }}
+            transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '400px',
+              height: '300px',
+              pointerEvents: 'none',
+              zIndex: 0,
+              borderRadius: '24px',
+              overflow: 'hidden',
+              boxShadow: '0 40px 100px rgba(0,0,0,0.4)',
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}
+          >
+            <Image 
+              src={project.image} 
+              alt={project.name} 
+              fill 
+              style={{ objectFit: 'cover' }} 
+              priority
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
@@ -663,82 +680,62 @@ const AppleCard = ({ category, title, image }: { category: string, title: string
   );
 };
 
-const TeamCard = ({ name, role, index, image }: { name: string, role: string, index: number, image: string }) => {
-  const positions = [
-    '0% 0%', '50% 0%', '100% 0%',
-    '0% 50%', '50% 50%', '100% 50%',
-    '0% 100%', '50% 100%', '100% 100%'
-  ];
-
+const TeamCard = ({ name, role, index }: { name: string, role: string, index: number }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -10 }}
+      transition={{ duration: 0.6, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ 
+        y: -12,
+        backgroundColor: 'var(--subtle-bg)',
+        borderColor: '#FE532D'
+      }}
       style={{
         background: 'var(--glass-bg)',
-        backdropFilter: 'blur(15px)',
-        WebkitBackdropFilter: 'blur(15px)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
         border: '1px solid var(--glass-border)',
-        borderRadius: '32px',
-        padding: '1.5rem',
+        borderRadius: '24px',
+        padding: '2.5rem 2rem',
         display: 'flex',
         flexDirection: 'column',
-        gap: '1.5rem',
-        transition: 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)',
-        cursor: 'pointer'
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        gap: '0.75rem',
+        transition: 'all 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
+        cursor: 'default',
+        minHeight: '180px'
       }}
     >
-      <div style={{ 
-        width: '100%', 
-        aspectRatio: '1', 
-        borderRadius: '24px', 
-        overflow: 'hidden',
-        background: '#fff',
-        position: 'relative',
-        border: '1px solid rgba(0,0,0,0.03)'
+      <p style={{ 
+        fontSize: '0.7rem', 
+        textTransform: 'uppercase', 
+        letterSpacing: '0.25em', 
+        opacity: 0.5, 
+        color: '#FE532D',
+        fontWeight: 700
       }}>
-        <div 
-          style={{ 
-            position: 'absolute', 
-            inset: 0, 
-            backgroundImage: `url(${image})`,
-            backgroundSize: '300% 300%',
-            backgroundPosition: positions[index],
-            backgroundRepeat: 'no-repeat',
-            transform: 'scale(1.1)', // Slight zoom for better focus
-          }} 
-        />
-        <div style={{ 
-          position: 'absolute', 
-          inset: 0, 
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0) 70%, rgba(0,0,0,0.03) 100%)',
-          zIndex: 1
-        }} />
-      </div>
-      <div style={{ padding: '0 0.5rem' }}>
-        <p style={{ 
-          fontSize: '0.65rem', 
-          textTransform: 'uppercase', 
-          letterSpacing: '0.2em', 
-          opacity: 0.4, 
-          marginBottom: '0.4rem',
-          color: 'var(--text-color)',
-          fontWeight: 600
-        }}>
-          {role}
-        </p>
-        <h4 style={{ 
-          fontSize: '1.2rem', 
-          fontWeight: 600, 
-          color: 'var(--text-color)',
-          lineHeight: 1.1
-        }}>
-          {name}
-        </h4>
-      </div>
+        {role}
+      </p>
+      <h4 style={{ 
+        fontSize: '1.4rem', 
+        fontWeight: 800, 
+        color: 'var(--text-color)',
+        lineHeight: 1.2,
+        fontFamily: 'var(--font-outfit)'
+      }}>
+        {name}
+      </h4>
+      <div style={{ 
+        width: '24px', 
+        height: '2px', 
+        background: '#FE532D', 
+        marginTop: '1rem',
+        opacity: 0.3 
+      }} />
     </motion.div>
   );
 };
@@ -1279,9 +1276,9 @@ export default function Home() {
           </div>
         </motion.div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           {projects.map((project, i) => (
-            <ProjectCard key={project.name} project={project} index={i} />
+            <ProjectRow key={project.name} project={project} index={i} />
           ))}
         </div>
       </section>
@@ -1328,23 +1325,20 @@ export default function Home() {
           <h2 style={{ fontSize: '3rem', fontFamily: 'var(--font-outfit)', fontWeight: 800 }}>Our Team</h2>
         </motion.div>
         
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', 
-          gap: '1.5rem' 
-        }}>
+        <div className="team-grid">
           {[
-            { name: "Alexander Croft", role: "AI Engineer" },
-            { name: "Sarah Sterling", role: "UI/UX Designer" },
-            { name: "Marcus Vane", role: "Backend Developer" },
-            { name: "James Knight", role: "Frontend Developer" },
-            { name: "Elena Rossi", role: "Marketing Specialist" },
-            { name: "David Chen", role: "Product Manager" },
-            { name: "Chloe Aris", role: "Data Scientist" },
-            { name: "Victor Thorne", role: "Security Specialist" },
-            { name: "Isobel Vance", role: "DevOps Engineer" }
+            { name: "Alexander Croft", role: "AI Engineering" },
+            { name: "Sarah Sterling", role: "Brand Identity" },
+            { name: "Marcus Vane", role: "Cloud Architecture" },
+            { name: "James Knight", role: "Creative Direction" },
+            { name: "Elena Rossi", role: "Digital Strategy" },
+            { name: "Rupert Finch", role: "Growth Lead" },
+            { name: "David Chen", role: "Product Design" },
+            { name: "Chloe Aris", role: "Data Intelligence" },
+            { name: "Victor Thorne", role: "Cybersecurity" },
+            { name: "Isobel Vance", role: "Frontend Engineering" }
           ].map((m, i) => (
-            <TeamCard key={i} name={m.name} role={m.role} index={i} image="/minimalist_anime_team.png" />
+            <TeamCard key={i} name={m.name} role={m.role} index={i} />
           ))}
         </div>
       </section>
