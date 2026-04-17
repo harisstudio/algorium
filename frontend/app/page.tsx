@@ -1,8 +1,17 @@
-"use client";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useMotionValue, useSpring, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useScroll, useTransform, useInView, LayoutGroup } from "framer-motion";
 import Magnetic from "@/components/Magnetic";
+import { PortalProvider, usePortal } from "@/context/PortalContext";
+import PortalSidebar from "@/components/portal/PortalSidebar";
+import PortalHeader from "@/components/portal/PortalHeader";
+import DashboardView from "@/components/portal/Views/DashboardView";
+import FilesView from "@/components/portal/Views/FilesView";
+import FinanceView from "@/components/portal/Views/FinanceView";
+import MessageView from "@/components/portal/Views/MessageView";
+import SettingsView from "@/components/portal/Views/SettingsView";
+import AdminView from "@/components/portal/Views/AdminView";
+import { NotesView, PaymentModal } from "@/components/portal/Views/UtilityViews";
 
 // ── Warp-Speed Starfield (scroll-reactive) ──
 const Contact3DAnimation = () => {
@@ -879,26 +888,115 @@ const AppleStyleCarousel = () => {
   );
 };
 
+const PortalSystem = () => {
+  const { 
+    showPortal, 
+    portalStage, 
+    activeTab, 
+    toast, 
+    handleLogin, 
+    userRole 
+  } = usePortal();
+  
+  const [localClientData, setLocalClientData] = useState({ company: '', password: '' });
+  const darkMode = true; // Portal is locked to dark mode for elite aesthetic
+
+  return (
+    <>
+      <AnimatePresence>
+        {showPortal && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.05 }}
+            style={{ 
+              position: 'fixed', 
+              inset: 0, 
+              zIndex: 9999, 
+              display: 'flex', 
+              background: '#000',
+              overflow: 'hidden',
+              fontFamily: 'var(--font-outfit)'
+            }}
+          >
+            {portalStage === 'dashboard' && <PortalSidebar darkMode={darkMode} />}
+
+            <div style={{ flex: 1, height: '100vh', display: 'flex', flexDirection: 'column', background: darkMode ? '#080810' : '#ffffff', position: 'relative', overflow: 'hidden' }}>
+              {portalStage === 'login' ? (
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ maxWidth: '400px', width: '100%', textAlign: 'center', padding: '2rem' }}>
+                    <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: '#fff', fontWeight: 800 }}>Access Portal</h2>
+                    <p style={{ opacity: 0.5, marginBottom: '3rem', color: '#fff' }}>Algorium Enterprise Synchronization</p>
+                    
+                    <input 
+                      type="text" 
+                      placeholder="Company Name"
+                      onChange={(e) => setLocalClientData({ ...localClientData, company: e.target.value })}
+                      style={{ width: '100%', padding: '20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '15px', color: '#fff', marginBottom: '1.2rem', outline: 'none' }}
+                    />
+                    <input 
+                      type="password" 
+                      placeholder="Access Code"
+                      onChange={(e) => setLocalClientData({ ...localClientData, password: e.target.value })}
+                      style={{ width: '100%', padding: '20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '15px', color: '#fff', marginBottom: '2.5rem', outline: 'none' }}
+                    />
+                    
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleLogin(localClientData)}
+                      style={{ width: '100%', padding: '22px', background: '#FE532D', color: '#fff', border: 'none', borderRadius: '15px', fontWeight: 800, cursor: 'pointer', fontSize: '1rem', boxShadow: '0 15px 30px rgba(254, 83, 45, 0.2)' }}
+                    >
+                      INITIALIZE SYNC
+                    </motion.button>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ flex: 1, overflowY: 'auto', padding: '4rem 6rem' }}>
+                  <PortalHeader darkMode={darkMode} />
+                  
+                  {activeTab === 'Overview' && <DashboardView darkMode={darkMode} />}
+                  {activeTab === 'Drive Space' && <FilesView darkMode={darkMode} />}
+                  {activeTab === 'Invoices' && <FinanceView darkMode={darkMode} />}
+                  {activeTab === 'Messages' && <MessageView darkMode={darkMode} />}
+                  {activeTab === 'Notes' && <NotesView darkMode={darkMode} />}
+                  {activeTab === 'Settings' && <SettingsView darkMode={darkMode} />}
+                  {activeTab === 'Admin' && userRole === 'admin' && <AdminView darkMode={darkMode} />}
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <PaymentModal />
+
+      <AnimatePresence>
+        {toast.type && (
+          <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 50, opacity: 0 }} style={{ position: 'fixed', bottom: '40px', left: '50%', x: '-50%', padding: '16px 32px', background: toast.type === 'success' ? '#32d74b' : '#FE532D', color: '#fff', borderRadius: '50px', fontWeight: 800, fontSize: '0.9rem', boxShadow: '0 10px 40px rgba(0,0,0,0.3)', zIndex: 10001, display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
 export default function Home() {
-  const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true },
-    transition: { duration: 0.8, ease: "easeOut" } as any
-  };
+  return (
+    <PortalProvider>
+      <HomeContent />
+    </PortalProvider>
+  );
+}
 
-  const slogans = [
-    "Digital Elite",
-    "Creativity",
-    "Software",
-    "Graphic Design",
-    "Social Media",
-    "E-commerce"
-  ];
-
+function HomeContent() {
+  const { setShowPortal } = usePortal();
   const [index, setIndex] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showGame, setShowGame] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -908,12 +1006,20 @@ export default function Home() {
     message: ''
   });
   const [searchQuery, setSearchQuery] = useState('');
-  const [showGame, setShowGame] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
+
+  const fadeInUp = {
+    initial: { opacity: 0, y: 60 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+    transition: { duration: 0.8, ease: "easeOut" } as any
+  };
+
+  const slogans = ["Digital Elite", "Creativity", "Software", "Graphic Design", "Social Media", "E-commerce"];
 
   const handleInterestChange = (item: string) => {
     setFormData(prev => ({
@@ -1048,10 +1154,17 @@ export default function Home() {
             type="text"
             placeholder="Search expertise, projects..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setSearchQuery(val);
+              if (val.toLowerCase() === 'file') {
+                setShowPortal(true);
+                setSearchQuery(''); // Clear it so it feels like a command
+              }
+            }}
             style={{
               width: '100%',
-              padding: '10px 20px 10px 45px',
+              padding: '10px 170px 10px 45px',
               borderRadius: '30px',
               background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
               border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`,
@@ -1072,29 +1185,50 @@ export default function Home() {
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
           
-          {/* Quick Action Button — GAME */}
-          <motion.button
-            onClick={() => setShowGame(true)}
-            whileHover={{ scale: 1.05, filter: 'brightness(1.1)' }}
-            whileTap={{ scale: 0.95 }}
-            style={{
-              position: 'absolute',
-              right: '6px',
-              background: '#FE532D',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '20px',
-              padding: '6px 16px',
-              fontSize: '0.7rem',
-              fontWeight: 800,
-              letterSpacing: '0.1em',
-              cursor: 'pointer',
-              boxShadow: '0 2px 10px rgba(254, 83, 45, 0.3)',
-              userSelect: 'none'
-            }}
-          >
-            GAME
-          </motion.button>
+          <div style={{ position: 'absolute', right: '6px', display: 'flex', gap: '6px' }}>
+            {/* Quick Action Button — GAME */}
+            <motion.button
+              onClick={() => setShowGame(true)}
+              whileHover={{ scale: 1.05, filter: 'brightness(1.1)' }}
+              whileTap={{ scale: 0.95 }}
+              style={{
+                background: '#FE532D',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '20px',
+                padding: '6px 12px',
+                fontSize: '0.65rem',
+                fontWeight: 800,
+                letterSpacing: '0.1em',
+                cursor: 'pointer',
+                boxShadow: '0 2px 10px rgba(254, 83, 45, 0.3)',
+                fontFamily: 'var(--font-inter)'
+              }}
+            >
+              GAME
+            </motion.button>
+
+            {/* Quick Action Button — CUSTOMER */}
+            <motion.button
+              onClick={() => setShowPortal(true)}
+              whileHover={{ scale: 1.05, filter: 'brightness(1.1)' }}
+              whileTap={{ scale: 0.95 }}
+              style={{
+                background: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.8)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '20px',
+                padding: '6px 12px',
+                fontSize: '0.65rem',
+                fontWeight: 800,
+                letterSpacing: '0.1em',
+                cursor: 'pointer',
+                fontFamily: 'var(--font-inter)'
+              }}
+            >
+              CUSTOMER
+            </motion.button>
+          </div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
@@ -1952,9 +2086,29 @@ export default function Home() {
                 ✕
               </button>
               
-              <div style={{ textAlign: 'center' }}>
-                <h3 className="serif italic" style={{ fontSize: '1.5rem', color: '#FE532D', margin: 0 }}>Algorium Atari</h3>
-                <p style={{ fontSize: '0.7rem', opacity: 0.5, textTransform: 'uppercase', letterSpacing: '0.2em' }}>Hit all blocks to win</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', paddingBottom: '0.5rem' }}>
+                <style>{`
+                  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+                `}</style>
+                <Image 
+                  src="/new-logo.png" 
+                  alt="Algorium Logo" 
+                  width={140} 
+                  height={40} 
+                  style={{ 
+                    objectFit: 'contain', 
+                    // Filter to convert to #FE532D
+                    filter: 'brightness(0) saturate(100%) invert(48%) sepia(87%) saturate(3015%) hue-rotate(344deg) brightness(101%) contrast(101%)' 
+                  }}
+                />
+                <span style={{ 
+                  fontFamily: '"Press Start 2P", system-ui', 
+                  fontSize: '0.8rem', 
+                  color: '#FE532D',
+                  paddingTop: '4px'
+                }}>
+                  ATARI
+                </span>
               </div>
 
               <BreakoutGame />
@@ -1962,11 +2116,366 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Algorium Client Portal (File System) */}
+      <AnimatePresence>
+        {showPortal && (
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              background: darkMode ? '#080810' : '#ffffff',
+              zIndex: 3500,
+              display: 'flex',
+              overflow: 'hidden',
+              color: darkMode ? '#fff' : '#000'
+            }}
+          >
+            {/* Sidebar / Navigation */}
+            <div 
+              data-lenis-prevent
+              style={{ 
+                width: '280px', 
+                height: '100%',
+                background: darkMode ? '#05050a' : '#f8f8fa', 
+                borderRight: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`,
+                display: 'flex',
+                flexDirection: 'column',
+                padding: '1.5rem',
+                overflowY: 'auto'
+              }}
+            >
+              <div style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '1rem', paddingLeft: '0.5rem' }}>
+                <Image 
+                  src="/new-logo.png" 
+                  alt="Logo" 
+                  width={220} 
+                  height={70} 
+                  style={{ 
+                    width: '140px', 
+                    height: 'auto', 
+                    filter: darkMode ? 'brightness(0) invert(1)' : 'none' 
+                  }} 
+                />
+              </div>
+
+              {/* Google Drive style "NEW" button */}
+              <div style={{ position: 'relative', marginBottom: '2.5rem' }}>
+                <button 
+                  onClick={() => setShowNewMenu(!showNewMenu)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    padding: '12px 24px',
+                    background: darkMode ? '#fff' : '#000',
+                    color: darkMode ? '#000' : '#fff',
+                    border: 'none',
+                    borderRadius: '16px',
+                    fontSize: '0.9rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                    width: 'fit-content'
+                  }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M12 5v14M5 12h14"/></svg>
+                  NEW
+                </button>
+
+                <AnimatePresence>
+                  {showNewMenu && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: 0,
+                        marginTop: '10px',
+                        background: darkMode ? '#151520' : '#fff',
+                        border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                        borderRadius: '12px',
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+                        zIndex: 4000,
+                        width: '200px',
+                        padding: '8px'
+                      }}
+                    >
+                      {[
+                        { label: 'File Upload', icon: 'M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z' },
+                        { label: 'New Folder', icon: 'M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z' },
+                        { label: 'New Invoice', icon: 'M7 15h0M2 9.5h20', adminOnly: true }
+                      ].filter(item => !item.adminOnly || userRole === 'admin').map((item, i) => (
+                        <div 
+                          key={i}
+                          onClick={() => {
+                            setShowNewMenu(false);
+                            if (item.label === 'File Upload') {
+                               const newFile = {
+                                  name: prompt('Enter file name', 'New Presentation.pdf') || 'New File.pdf',
+                                  size: '1.2 MB',
+                                  type: 'Document'
+                               };
+                               setDriveFiles([newFile, ...driveFiles]);
+                            } else if (item.label === 'New Folder') {
+                               alert('Feature: Sub-folder creation initialized.');
+                            } else if (item.label === 'New Invoice') {
+                               if (activeProject) {
+                                  performAdminAction(activeProject.id, 'invoice', { 
+                                    id: `INV-${Math.floor(Math.random()*900)+100}`, 
+                                    amount: '£1,500', 
+                                    status: 'Pending', 
+                                    date: new Date().toLocaleDateString() 
+                                  });
+                               }
+                            }
+                          }}
+                          style={{
+                            padding: '10px 12px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            fontSize: '0.85rem'
+                          }}
+                          className="new-menu-item"
+                        >
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FE532D" strokeWidth="2"><path d={item.icon}/></svg>
+                          {item.label}
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div style={{ marginBottom: '2rem' }}>
+                <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  {[
+                    { name: 'Overview', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
+                    { name: 'Drive Space', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> },
+                    { name: 'Invoices', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h0M2 9.5h20"/></svg> },
+                    { name: 'Messages', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
+                    { name: 'Notes', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
+                    { name: 'Settings', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1-2.83 0l-.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> },
+                    ...(userRole === 'admin' ? [{ name: 'Admin', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg> }] : [])
+                  ].map(item => (
+                    <motion.div
+                      key={item.name}
+                      whileHover={{ x: 5, background: darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)' }}
+                      onClick={() => setActiveTab(item.name as any)}
+                      style={{
+                        padding: '10px 14px',
+                        borderRadius: '10px',
+                        fontSize: '0.85rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        background: activeTab === item.name ? 'rgba(253, 53, 29, 0.1)' : 'transparent',
+                        color: activeTab === item.name ? '#FE532D' : (darkMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)'),
+                        fontWeight: activeTab === item.name ? 600 : 400,
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      {item.icon}
+                      {item.name}
+                    </motion.div>
+                  ))}
+                </nav>
+              </div>
+
+              <div style={{ marginTop: 'auto' }}>
+                 <div style={{ padding: '20px', background: darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)', borderRadius: '20px', marginBottom: '1.5rem', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'}` }}>
+                    <div style={{ fontSize: '0.75rem', opacity: 0.5, marginBottom: '0.8rem', fontWeight: 600 }}>Storage Breakdown</div>
+                    <div style={{ display: 'flex', gap: '4px', height: '6px', borderRadius: '3px', overflow: 'hidden', marginBottom: '1rem' }}>
+                       <div style={{ width: '45%', background: '#FE532D' }} />
+                       <div style={{ width: '25%', background: '#32d74b' }} />
+                       <div style={{ width: '15%', background: 'rgba(255,255,255,0.2)' }} />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', opacity: 0.4 }}>
+                       <span>● Design</span>
+                       <span>● Assets</span>
+                    </div>
+                 </div>
+                    <div style={{ fontSize: '0.7rem', opacity: 0.4 }}>3.5GB of 5GB used</div>
+                 </div>
+
+                <button 
+                  onClick={() => { 
+                    localStorage.removeItem('algorium_portal_session');
+                    setShowPortal(false); 
+                    setPortalStage('login'); 
+                    setActiveProject(null); 
+                    setUserRole(null);
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    background: 'transparent',
+                    border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                    borderRadius: '10px',
+                    color: darkMode ? '#fff' : '#000',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px'
+                  }}
+                >
+                  SIGN OUT
+                </button>
+              </div>
+
+            {/* Main Content Area */}
+            <div style={{ 
+              flex: 1, 
+              height: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+              background: darkMode ? '#080810' : '#ffffff', 
+              position: 'relative',
+              overflow: 'hidden'
+            }}>
+              {portalStage === 'login' ? (
+                <div 
+                  data-lenis-prevent
+                  style={{ flex: 1, overflowY: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  <div style={{ maxWidth: '400px', width: '100%', textAlign: 'center', padding: '2rem' }}>
+                    <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: darkMode ? '#fff' : '#000' }}>Access Portal</h2>
+                    <p style={{ opacity: 0.5, marginBottom: '3rem', color: darkMode ? '#fff' : '#000' }}>Please enter your synchronization credentials.</p>
+                    
+                    <input 
+                      type="text" 
+                      placeholder="Company Name"
+                      onChange={(e) => setClientData({ ...clientData, company: e.target.value })}
+                      style={{ width: '100%', padding: '18px', background: darkMode ? 'rgba(255,255,255,0.03)' : '#f5f5f7', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '15px', color: darkMode ? '#fff' : '#000', marginBottom: '1.2rem', outline: 'none' }}
+                    />
+                    <input 
+                      type="password" 
+                      placeholder="Access Code"
+                      onChange={(e) => setClientData({ ...clientData, password: e.target.value })}
+                      style={{ width: '100%', padding: '18px', background: darkMode ? 'rgba(255,255,255,0.03)' : '#f5f5f7', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '15px', color: darkMode ? '#fff' : '#000', marginBottom: '2.5rem', outline: 'none' }}
+                    />
+                    
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={handlePortalLogin}
+                      style={{ width: '100%', padding: '20px', background: '#FE532D', color: '#fff', border: 'none', borderRadius: '15px', fontWeight: 700, cursor: 'pointer', fontSize: '1rem' }}
+                    >
+                      LOGIN TO SYSTEM
+                    </motion.button>
+                  </div>
+                </div>
+              ) : (
+                <div 
+                  data-lenis-prevent
+                  style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}
+                >
+                  <div style={{ padding: '4rem 6rem' }}>
+                    {/* Header with Active Project Info */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5rem', borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, paddingBottom: '3rem' }}>
+                        <div>
+                          <div style={{ fontSize: '0.8rem', color: '#FE532D', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{activeTab.replace(' Space', '')}</div>
+              <PortalSystem />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Global Notification Toast */}
+      <AnimatePresence>
+        {toast.type && (
+          <motion.div
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 50, opacity: 0 }}
+            style={{
+              position: 'fixed',
+              bottom: '40px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              padding: '16px 32px',
+              background: toast.type === 'success' ? '#32d74b' : '#FE532D',
+              color: '#fff',
+              borderRadius: '50px',
+              fontWeight: 700,
+              fontSize: '0.9rem',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.3)',
+              zIndex: 9999,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Payment Simulation Modal */}
+      <AnimatePresence>
+        {showPaymentModal && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+             <motion.div 
+               initial={{ opacity: 0 }} 
+               animate={{ opacity: 1 }} 
+               exit={{ opacity: 0 }} 
+               onClick={() => setShowPaymentModal(false)}
+               style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(10px)' }} 
+             />
+             <motion.div 
+               initial={{ y: 100, opacity: 0, scale: 0.9 }} 
+               animate={{ y: 0, opacity: 1, scale: 1 }}
+               exit={{ y: 100, opacity: 0, scale: 0.9 }}
+               style={{ width: '400px', background: '#0a0a0f', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '32px', padding: '40px', position: 'relative', zIndex: 1, textAlign: 'center' }}
+             >
+                <div style={{ width: '60px', height: '60px', borderRadius: '15px', background: 'rgba(254,83,45,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem' }}>
+                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FE532D" strokeWidth="2.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                </div>
+                <h3 style={{ color: '#fff', fontSize: '1.5rem', fontWeight: 800, marginBottom: '1rem' }}>Secure Checkout</h3>
+                <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.9rem', marginBottom: '2.5rem' }}>Invoice: {pendingPayment?.id} <br/> Amount: {pendingPayment?.amount}</p>
+                
+                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '20px', borderRadius: '15px', marginBottom: '2rem', textAlign: 'left', border: '1px solid rgba(255,255,255,0.05)' }}>
+                   <div style={{ fontSize: '0.7rem', opacity: 0.4, marginBottom: '8px' }}>PAYING VIA</div>
+                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#fff', fontWeight: 600 }}>
+                      <div style={{ width: '32px', height: '20px', background: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px' }} />
+                      Apple Pay / Card ending in 4242
+                   </div>
+                </div>
+
+                <motion.button 
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handlePaymentSuccess}
+                  style={{ width: '100%', padding: '18px', background: '#fff', color: '#000', borderRadius: '15px', fontWeight: 800, fontSize: '1rem', border: 'none', cursor: 'pointer' }}
+                >
+                  PAY WITH TOUCH ID
+                </motion.button>
+                <button onClick={() => setShowPaymentModal(false)} style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.3)', marginTop: '1.5rem', fontSize: '0.8rem', cursor: 'pointer' }}>Cancel Payment</button>
+             </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-// ── Algorium Pro Atari (Advanced Arkanoid Clone) ──
+// ── Algorium Boutique Atari (Custom Clean Version) ──
 const BreakoutGame = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
@@ -1976,297 +2485,234 @@ const BreakoutGame = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Constants & Configuration
-    const CONFIG = {
-      ballSpeed: 4,
-      gravity: 0.1,
-      paddleSpeed: 0.2,
-      maxParticles: 50,
-      powerUpChance: 0.2
-    };
-
-    const COLORS = {
-      bg: '#080810',
-      primary: '#FE532D',
-      secondary: '#fff',
-      bricks: ['#FF1493', '#00BFFF', '#32CD32', '#FFD700', '#FF4500'],
-      glow: 'rgba(254, 83, 45, 0.4)'
-    };
-
-    // Types
-    interface Particle {
-      x: number; y: number; dx: number; dy: number; r: number; life: number; color: string;
-    }
-    interface Ball {
-      x: number; y: number; dx: number; dy: number; r: number; trail: {x: number, y: number}[]; active: boolean;
-    }
-    interface Brick {
-      x: number; y: number; w: number; h: number; status: number; color: string;
-    }
-    interface PowerUp {
-      x: number; y: number; type: 'WIDE' | 'MULTI' | 'SLOW'; dy: number; active: boolean;
-    }
-
-    // Game State
-    let balls: Ball[] = [{ x: canvas.width / 2, y: canvas.height - 50, dx: 4, dy: -4, r: 5, trail: [], active: true }];
-    let paddle = { x: canvas.width / 2 - 50, y: canvas.height - 25, w: 100, targetX: canvas.width / 2 - 50, h: 10 };
-    let bricks: Brick[] = [];
-    let particles: Particle[] = [];
-    let powerUps: PowerUp[] = [];
+    // --- Configuration ---
+    const ORANGE = '#FE532D';
+    const BG = '#05050a';
+    
+    let gameState: 'READY' | 'PLAYING' | 'GAMEOVER' | 'WON' = 'READY';
     let score = 0;
-    let level = 1;
     let lives = 3;
-    let started = false;
-    let shake = 0;
-    let frame = 0;
+    let level = 1;
 
-    const initLevel = () => {
+    // Objects
+    const ball = {
+      x: canvas.width / 2,
+      y: canvas.height - 40,
+      r: 5,
+      dx: 4,
+      dy: -4,
+      baseSpeed: 4.5
+    };
+
+    const paddle = {
+      w: 100,
+      h: 10,
+      x: (canvas.width - 100) / 2,
+      y: canvas.height - 25,
+      targetX: (canvas.width - 100) / 2,
+      speed: 0.15
+    };
+
+    interface Brick { x: number; y: number; w: number; h: number; active: boolean; opacity: number; }
+    let bricks: Brick[] = [];
+
+    const initBricks = () => {
       bricks = [];
+      const rows = 4 + level;
       const cols = 8;
-      const rows = 3 + level;
-      const pad = 8;
-      const w = (canvas.width - (cols + 1) * pad) / cols;
-      const h = 18;
+      const padding = 6;
+      const offsetTop = 50;
+      const bWidth = (canvas.width - (cols + 1) * padding) / cols;
+      const bHeight = 15;
+
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           bricks.push({
-            x: c * (w + pad) + pad,
-            y: r * (h + pad) + 60,
-            w, h, status: 1,
-            color: COLORS.bricks[r % COLORS.bricks.length]
+            x: c * (bWidth + padding) + padding,
+            y: r * (bHeight + padding) + offsetTop,
+            w: bWidth,
+            h: bHeight,
+            active: true,
+            // Different opacities for visual depth
+            opacity: 1 - (r * 0.15) 
           });
         }
       }
     };
 
-    const spawnPowerUp = (x: number, y: number) => {
-      if (Math.random() < CONFIG.powerUpChance) {
-        const types: ('WIDE' | 'MULTI' | 'SLOW')[] = ['WIDE', 'MULTI', 'SLOW'];
-        powerUps.push({
-          x, y, 
-          type: types[Math.floor(Math.random() * types.length)],
-          dy: 2,
-          active: true
-        });
-      }
-    };
+    initBricks();
 
-    const explode = (x: number, y: number, color: string) => {
-      for (let i = 0; i < 12; i++) {
-        particles.push({
-          x, y,
-          dx: (Math.random() - 0.5) * 8,
-          dy: (Math.random() - 0.5) * 8,
-          r: Math.random() * 3 + 1,
-          life: 1,
-          color
-        });
-      }
-    };
-
-    const handleInput = (e: MouseEvent) => {
+    // Input Handling
+    const onMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       paddle.targetX = e.clientX - rect.left - paddle.w / 2;
     };
-
-    canvas.addEventListener('mousemove', handleInput);
-    canvas.addEventListener('click', () => { if (!started) started = true; });
-
-    initLevel();
-
-    const loop = () => {
-      frame++;
-      ctx.save();
-      
-      // Screen Shake
-      if (shake > 0) {
-        ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
-        shake *= 0.85;
+    const onClick = () => {
+      if (gameState === 'READY') gameState = 'PLAYING';
+      if (gameState === 'GAMEOVER' || gameState === 'WON') {
+        score = 0; lives = 3; level = 1; 
+        ball.x = canvas.width / 2; ball.y = canvas.height - 40;
+        ball.dx = 4; ball.dy = -4;
+        initBricks();
+        gameState = 'READY';
       }
+    };
 
-      // Background - Moving Grid
-      ctx.fillStyle = COLORS.bg;
+    canvas.addEventListener('mousemove', onMouseMove);
+    canvas.addEventListener('click', onClick);
+
+    // Collision Helper
+    const checkCollision = (circle: any, rect: any) => {
+      let closestX = Math.max(rect.x, Math.min(circle.x, rect.x + rect.w));
+      let closestY = Math.max(rect.y, Math.min(circle.y, rect.y + rect.h));
+      let distanceX = circle.x - closestX;
+      let distanceY = circle.y - closestY;
+      let distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
+      return distanceSquared < (circle.r * circle.r);
+    };
+
+    // --- Game Loop ---
+    const draw = () => {
+      // 1. Clear & Background
+      ctx.fillStyle = BG;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      
-      ctx.strokeStyle = 'rgba(255,255,255,0.03)';
-      ctx.lineWidth = 1;
-      const scroll = (frame % 40) / 40 * 40;
-      for (let i = -40; i < canvas.width; i += 40) {
-        ctx.beginPath(); ctx.moveTo(i + scroll, 0); ctx.lineTo(i + scroll, canvas.height); ctx.stroke();
-      }
-      for (let j = -40; j < canvas.height; j += 40) {
-        ctx.beginPath(); ctx.moveTo(0, j + scroll); ctx.lineTo(canvas.width, j + scroll); ctx.stroke();
+
+      // 2. Draw Bricks
+      let activeCount = 0;
+      bricks.forEach(b => {
+        if (!b.active) return;
+        activeCount++;
+        ctx.beginPath();
+        ctx.roundRect(b.x, b.y, b.w, b.h, 4);
+        ctx.fillStyle = ORANGE;
+        ctx.globalAlpha = b.opacity;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+
+      if (activeCount === 0) {
+        level++;
+        initBricks();
+        ball.y = canvas.height - 40;
+        ball.dy = -Math.abs(ball.dy);
+        gameState = 'READY';
       }
 
-      if (!started) {
-        ctx.fillStyle = COLORS.primary;
-        ctx.font = 'bold 24px Outfit';
-        ctx.textAlign = 'center';
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = COLORS.primary;
-        ctx.fillText('CLICK TO START', canvas.width / 2, canvas.height / 2 + 50);
-        ctx.shadowBlur = 0;
-      }
-
-      // Update Paddle
-      paddle.x += (paddle.targetX - paddle.x) * CONFIG.paddleSpeed;
+      // 3. Draw Paddle
+      paddle.x += (paddle.targetX - paddle.x) * paddle.speed;
       paddle.x = Math.max(0, Math.min(canvas.width - paddle.w, paddle.x));
       
       ctx.beginPath();
       ctx.roundRect(paddle.x, paddle.y, paddle.w, paddle.h, 5);
-      ctx.fillStyle = COLORS.secondary;
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = COLORS.secondary;
+      ctx.fillStyle = ORANGE;
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = ORANGE;
       ctx.fill();
       ctx.shadowBlur = 0;
 
-      // Update PowerUps
-      powerUps.forEach((p, idx) => {
-        if (!p.active) return;
-        p.y += p.dy;
-        
-        // Render
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
-        ctx.fillStyle = COLORS.primary;
-        ctx.fill();
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 8px Inter';
-        ctx.textAlign = 'center';
-        ctx.fillText(p.type[0], p.x, p.y + 3);
+      // 4. Draw Ball
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff'; // White core for neon look
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = ORANGE;
+      ctx.fill();
+      ctx.shadowBlur = 0;
 
-        // Collect
-        if (p.y > paddle.y && p.y < paddle.y + paddle.h && p.x > paddle.x && p.x < paddle.x + paddle.w) {
-          p.active = false;
-          if (p.type === 'WIDE') {
-            paddle.w = 160;
-            setTimeout(() => paddle.w = 100, 8000);
-          } else if (p.type === 'MULTI') {
-            const b = balls[0];
-            balls.push({ ...b, dx: -b.dx, trail: [] });
-          } else if (p.type === 'SLOW') {
-            balls.forEach(b => { b.dx *= 0.5; b.dy *= 0.5; });
-            setTimeout(() => balls.forEach(b => { b.dx *= 2; b.dy *= 2; }), 5000);
-          }
-        }
-        if (p.y > canvas.height) p.active = false;
-      });
+      // 5. Update Logic
+      if (gameState === 'PLAYING') {
+        ball.x += ball.dx;
+        ball.y += ball.dy;
 
-      // Update Bricks
-      let remaining = 0;
-      bricks.forEach(b => {
-        if (b.status === 0) return;
-        remaining++;
-        ctx.beginPath();
-        ctx.roundRect(b.x, b.y, b.w, b.h, 4);
-        ctx.fillStyle = b.color;
-        ctx.fill();
-      });
-      if (remaining === 0) { level++; initLevel(); }
-
-      // Update Balls
-      balls.forEach((b, bIdx) => {
-        if (!b.active) return;
-        if (started) {
-          b.x += b.dx;
-          b.y += b.dy;
-        }
-
-        // Trails
-        b.trail.push({ x: b.x, y: b.y });
-        if (b.trail.length > 10) b.trail.shift();
-        b.trail.forEach((t, i) => {
-          ctx.globalAlpha = i / 20;
-          ctx.beginPath(); ctx.arc(t.x, t.y, b.r * (i/10), 0, Math.PI * 2);
-          ctx.fillStyle = COLORS.primary; ctx.fill();
-        });
-        ctx.globalAlpha = 1;
-
-        // Wall Collisions
-        if (b.x + b.r > canvas.width || b.x - b.r < 0) b.dx *= -1;
-        if (b.y - b.r < 0) b.dy *= -1;
+        // Wall Bounce
+        if (ball.x + ball.r > canvas.width || ball.x - ball.r < 0) ball.dx *= -1;
+        if (ball.y - ball.r < 0) ball.dy *= -1;
 
         // Paddle Collision
-        if (b.y + b.r > paddle.y && b.y < paddle.y + paddle.h && b.x > paddle.x && b.x < paddle.x + paddle.w) {
-          const hit = (b.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2);
-          b.dx = hit * 5;
-          b.dy = -Math.abs(b.dy);
-          shake = 3;
+        if (checkCollision(ball, paddle)) {
+          ball.dy = -Math.abs(ball.dy);
+          // Angle based on hit position
+          let hitPos = (ball.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2);
+          ball.dx = hitPos * ball.baseSpeed;
         }
 
         // Brick Collision
-        bricks.forEach(br => {
-          if (br.status === 1 && b.x > br.x && b.x < br.x + br.w && b.y > br.y && b.y < br.y + br.h) {
-            br.status = 0;
-            b.dy *= -1;
+        bricks.forEach(b => {
+          if (b.active && checkCollision(ball, b)) {
+            b.active = false;
+            ball.dy *= -1;
             score += 10;
-            shake = 5;
-            explode(br.x + br.w/2, br.y + br.h/2, br.color);
-            spawnPowerUp(br.x + br.w/2, br.y + br.h/2);
           }
         });
 
-        // Ball Lost
-        if (b.y > canvas.height) {
-          if (balls.length > 1) {
-            b.active = false;
-          } else {
-            lives--;
-            started = false;
-            b.x = canvas.width / 2; b.y = canvas.height - 50;
-            b.dx = 4; b.dy = -4;
-            if (lives <= 0) { score = 0; level = 1; lives = 3; started = false; initLevel(); }
+        // Die
+        if (ball.y > canvas.height) {
+          lives--;
+          if (lives <= 0) gameState = 'GAMEOVER';
+          else {
+            gameState = 'READY';
+            ball.x = canvas.width / 2;
+            ball.y = canvas.height - 40;
+            ball.dx = 4;
+            ball.dy = -4;
           }
         }
+      }
 
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-        ctx.fillStyle = COLORS.primary;
-        ctx.shadowBlur = 10; ctx.shadowColor = COLORS.primary;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-
-      // Particles
-      particles.forEach((p, idx) => {
-        p.x += p.dx; p.y += p.dy; p.life -= 0.02;
-        if (p.life <= 0) { particles.splice(idx, 1); return; }
-        ctx.globalAlpha = p.life;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = p.color; ctx.fill();
-      });
-      ctx.globalAlpha = 1;
-
-      // HUD
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 12px Inter';
+      // 6. UI
+      ctx.fillStyle = ORANGE;
+      ctx.font = 'bold 14px Inter';
       ctx.textAlign = 'left';
       ctx.fillText(`SCORE: ${score}`, 20, 30);
+      
       ctx.textAlign = 'right';
-      ctx.fillText(`LVL: ${level} | ${"❤️".repeat(lives)}`, canvas.width - 20, 30);
+      // Drawing Orange Hearts
+      const hearts = '🧡'.repeat(lives);
+      ctx.fillText(`LIVES: ${hearts}`, canvas.width - 20, 30);
 
-      ctx.restore();
-      requestAnimationFrame(loop);
+      // Overlays
+      if (gameState === 'READY') {
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = ORANGE;
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 20px Inter';
+        ctx.fillText('CLICK TO LAUNCH', canvas.width / 2, canvas.height / 2);
+      } else if (gameState === 'GAMEOVER') {
+        ctx.fillStyle = 'rgba(0,0,0,0.85)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = ORANGE;
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 24px Inter';
+        ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 10);
+        ctx.font = '14px Inter';
+        ctx.fillText('CLICK TO RESTART', canvas.width / 2, canvas.height / 2 + 30);
+      }
+
+      requestAnimationFrame(draw);
     };
 
-    const animId = requestAnimationFrame(loop);
+    const animId = requestAnimationFrame(draw);
+
     return () => {
-      canvas.removeEventListener('mousemove', handleInput);
+      canvas.removeEventListener('mousemove', onMouseMove);
+      canvas.removeEventListener('click', onClick);
       cancelAnimationFrame(animId);
     };
-  }, [level]);
+  }, []);
 
   return (
     <canvas 
       ref={canvasRef} 
-      width="540" 
-      height="400" 
+      width="500" 
+      height="380" 
       style={{ 
-        background: '#080810', 
-        borderRadius: '20px',
+        background: '#05050a', 
+        borderRadius: '24px',
         cursor: 'none',
-        boxShadow: '0 0 40px rgba(0,0,0,0.5), inset 0 0 30px rgba(254, 83, 45, 0.1)'
+        boxShadow: '0 0 50px rgba(254, 83, 45, 0.15)'
       }} 
     />
   );
 };
+
