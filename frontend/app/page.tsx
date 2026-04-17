@@ -269,6 +269,59 @@ const StarField = () => {
   );
 };
 
+const ImageSwitcher = () => {
+  const images = [
+    '/assets/images/porsche_final.png',
+    '/assets/images/macintosh_final.png',
+    '/assets/images/camera_final.png'
+  ];
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
+  return (
+    <div style={{ 
+      width: '650px', 
+      height: '400px', 
+      position: 'relative',
+      userSelect: 'none',
+      pointerEvents: 'none'
+    }}>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, scale: 0.8, y: 30, rotate: -5 }}
+          animate={{ 
+            opacity: 1, 
+            scale: index === 0 ? 1.15 : 1, 
+            y: index === 0 ? 20 : 0, 
+            rotate: 0 
+          }}
+          exit={{ opacity: 0, scale: 1.1, y: -30, rotate: 5 }}
+          transition={{ 
+            duration: 1.5, 
+            ease: [0.23, 1, 0.32, 1] 
+          }}
+          style={{ position: 'absolute', width: '100%', height: '100%' }}
+        >
+          <Image 
+            src={images[index]} 
+            alt="Algorium Collection" 
+            fill 
+            style={{ objectFit: 'contain' }} 
+            priority
+          />
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+};
+
 const AnalogClock = ({ city, timeZone }: { city: string, timeZone: string }) => {
   const [time, setTime] = useState(new Date());
 
@@ -437,9 +490,9 @@ const SpotlightCard = ({ title, desc, tag, col }: any) => {
         gridColumn: col, 
         position: 'relative', 
         overflow: 'hidden', 
-        padding: '3rem', 
+        padding: '64px', 
         background: 'var(--card-bg)',
-        borderRadius: '32px',
+        borderRadius: '12px',
         border: '1px solid var(--card-border)',
         boxShadow: `0 4px 24px var(--card-shadow)`,
         cursor: 'default',
@@ -557,13 +610,13 @@ const ProjectRow = ({ project, index }: { project: typeof projects[0], index: nu
               color: hovered ? '#FE532D' : 'var(--text-color)'
             }}
             transition={{ type: 'spring', stiffness: 200, damping: 25 }}
-            style={{
-              fontSize: 'clamp(2.5rem, 6vw, 6rem)',
-              fontWeight: 800,
-              lineHeight: 1,
-              letterSpacing: '-0.04em',
-              margin: 0,
-              textTransform: 'none'
+            style={{ 
+              fontSize: 'clamp(2.5rem, 6vw, 6rem)', 
+              fontWeight: 800, 
+              lineHeight: 1, 
+              letterSpacing: '-0.04em', 
+              margin: 0, 
+              textTransform: 'none' 
             }}
           >
             {project.name}
@@ -634,13 +687,13 @@ const AppleCard = ({ category, title, image }: { category: string, title: string
     <motion.div
       whileHover={{ 
         y: 12, 
-        boxShadow: '0 40px 80px rgba(254, 83, 45, 0.2)',
-        borderColor: 'rgba(254, 83, 45, 0.4)'
+        boxShadow: '0 40px 80px rgba(0, 0, 0, 0.1)',
+        borderColor: '#FE532D'
       }}
       style={{
-        flex: '0 0 350px',
-        height: '480px',
-        borderRadius: '32px',
+        flex: '0 0 320px',
+        height: '460px',
+        borderRadius: '16px',
         overflow: 'hidden',
         position: 'relative',
         background: 'var(--glass-bg)',
@@ -655,7 +708,7 @@ const AppleCard = ({ category, title, image }: { category: string, title: string
     >
       <div style={{ padding: '2.5rem 2rem 1.5rem', zIndex: 2 }}>
         <p style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.2em', opacity: 0.5, marginBottom: '0.8rem', color: 'var(--text-color)' }}>{category}</p>
-        <h3 style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-color)', lineHeight: 1.2, maxWidth: '80%' }}>{title}</h3>
+        <h3 style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-color)', lineHeight: 1.2, maxWidth: '80%' }} dangerouslySetInnerHTML={{ __html: title }} />
       </div>
       <div style={{ flex: 1, width: '100%', position: 'relative', padding: '0 1.5rem 1.5rem' }}>
         <div style={{ 
@@ -670,11 +723,8 @@ const AppleCard = ({ category, title, image }: { category: string, title: string
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <Image src={image} alt={title} fill style={{ objectFit: 'contain', transform: 'scale(1.02)' }} />
+          <Image src={image} alt={title} fill style={{ objectFit: 'cover' }} />
         </div>
-      </div>
-      <div style={{ position: 'absolute', bottom: '1.5rem', right: '1.5rem', width: '32px', height: '32px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.4 }}>
-        <span style={{ fontSize: '1.2rem', color: 'var(--text-color)', marginTop: '-1px' }}>+</span>
       </div>
     </motion.div>
   );
@@ -697,8 +747,8 @@ const TeamCard = ({ name, role, index }: { name: string, role: string, index: nu
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         border: '1px solid var(--glass-border)',
-        borderRadius: '24px',
-        padding: '2.5rem 2rem',
+        borderRadius: '8px',
+        padding: '32px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -804,10 +854,10 @@ const LogoMarquee = () => {
 
 const AppleStyleCarousel = () => {
   const cards = [
-    { category: 'Brand Strategy', title: 'Brand Management & Consultancy', image: '/projects/silver_ai_logo.png' },
-    { category: 'Product Design', title: 'UI & UX Web and System Design', image: '/projects/circular_ui.png' },
-    { category: 'Artificial Intelligence', title: 'AI Solutions (Visual & Software)', image: '/projects/code_sphere_orange.png' },
-    { category: '3D & Industrial', title: '3D Visual & Industrial Design', image: '/projects/abstract_3d.png' },
+    { category: 'Brand Strategy', title: 'Brand Management <br /> & Consultancy', image: '/projects/silver_ai_logo.png' },
+    { category: 'Product Design', title: 'UI & UX Web <br /> and System Design', image: '/projects/circular_ui.png' },
+    { category: 'Artificial Intelligence', title: 'AI Solutions <br /> (Visual & Software)', image: '/projects/code_sphere_orange.png' },
+    { category: '3D & Industrial', title: '3D Visual & <br /> Industrial Design', image: '/projects/abstract_3d.png' },
   ];
 
   return (
@@ -857,6 +907,8 @@ export default function Home() {
     interests: [] as string[],
     message: ''
   });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showGame, setShowGame] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -981,6 +1033,68 @@ export default function Home() {
             style={{ objectFit: 'contain', filter: darkMode ? 'brightness(0) invert(1)' : 'none', transition: 'filter 0.4s ease' }}
             priority
           />
+        </div>
+
+        {/* Search Bar — Centered */}
+        <div style={{ 
+          flex: 1, 
+          maxWidth: '400px', 
+          margin: '0 2rem', 
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          <input 
+            type="text"
+            placeholder="Search expertise, projects..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '10px 20px 10px 45px',
+              borderRadius: '30px',
+              background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+              border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`,
+              color: 'var(--text-color)',
+              fontSize: '0.85rem',
+              outline: 'none',
+              transition: 'all 0.3s ease',
+              fontFamily: 'var(--font-inter)'
+            }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = '#FE532D')}
+            onBlur={(e) => (e.currentTarget.style.borderColor = darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)')}
+          />
+          <svg 
+            style={{ position: 'absolute', left: '18px', opacity: darkMode ? 0.8 : 0.4, transition: 'color 0.4s ease' }} 
+            width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={darkMode ? '#FE532D' : 'currentColor'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          
+          {/* Quick Action Button — GAME */}
+          <motion.button
+            onClick={() => setShowGame(true)}
+            whileHover={{ scale: 1.05, filter: 'brightness(1.1)' }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              position: 'absolute',
+              right: '6px',
+              background: '#FE532D',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '20px',
+              padding: '6px 16px',
+              fontSize: '0.7rem',
+              fontWeight: 800,
+              letterSpacing: '0.1em',
+              cursor: 'pointer',
+              boxShadow: '0 2px 10px rgba(254, 83, 45, 0.3)',
+              userSelect: 'none'
+            }}
+          >
+            GAME
+          </motion.button>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
@@ -1166,7 +1280,8 @@ export default function Home() {
         display: 'flex', 
         flexDirection: 'column', 
         justifyContent: 'center',
-        paddingTop: '12rem'
+        paddingTop: '120px', 
+        paddingBottom: '60px'
       }}>
         <motion.h1 
           initial={{ opacity: 0, y: 30 }}
@@ -1176,7 +1291,7 @@ export default function Home() {
             fontSize: 'clamp(3.5rem, 12vw, 8rem)', 
             lineHeight: 0.9, 
             letterSpacing: '-0.04em',
-            marginBottom: '4rem'
+            marginBottom: '1rem'
           }}
         >
           Engineering For <br /> 
@@ -1209,23 +1324,35 @@ export default function Home() {
           </span>
         </motion.h1>
         
-        <motion.div {...fadeInUp} style={{ maxWidth: '700px' }}>
-          <p style={{ fontSize: '1.85rem', fontWeight: 500, lineHeight: 1.3 }}>
-            We design and build bespoke digital ecosystems for brands that refuse to settle for the ordinary.
-          </p>
-        </motion.div>
+        <div style={{ position: 'relative', width: '100%', maxWidth: '1400px', marginTop: '0.5rem' }}>
+          <motion.div {...fadeInUp} style={{ maxWidth: '700px' }}>
+            <p style={{ fontSize: '1.85rem', fontWeight: 500, lineHeight: 1.3, marginBottom: '3rem' }}>
+              We design and build bespoke digital ecosystems for brands that refuse to settle for the ordinary.
+            </p>
+            
+            {/* Clocks strictly below the description */}
+            <div style={{ display: 'flex', gap: '2.5rem', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+              <AnalogClock city="Tokyo" timeZone="Asia/Tokyo" />
+              <AnalogClock city="Hong Kong" timeZone="Asia/Hong_Kong" />
+              <AnalogClock city="Delhi" timeZone="Asia/Kolkata" />
+              <AnalogClock city="Istanbul" timeZone="Europe/Istanbul" />
+              <AnalogClock city="London" timeZone="Europe/London" />
+              <AnalogClock city="New York" timeZone="America/New_York" />
+            </div>
+          </motion.div>
 
-        <motion.div 
-          {...fadeInUp}
-          style={{ display: 'flex', gap: '2.5rem', marginTop: '3rem', justifyContent: 'center', flexWrap: 'wrap' }}
-        >
-          <AnalogClock city="Tokyo" timeZone="Asia/Tokyo" />
-          <AnalogClock city="Hong Kong" timeZone="Asia/Hong_Kong" />
-          <AnalogClock city="Delhi" timeZone="Asia/Kolkata" />
-          <AnalogClock city="Istanbul" timeZone="Europe/Istanbul" />
-          <AnalogClock city="London" timeZone="Europe/London" />
-          <AnalogClock city="New York" timeZone="America/New_York" />
-        </motion.div>
+          {/* Objects Showcase: Floating on the far right */}
+          <div style={{ 
+            position: 'absolute', 
+            top: '50%', 
+            right: '-4vw', 
+            transform: 'translateY(-50%)',
+            pointerEvents: 'none',
+            zIndex: 1
+          }}>
+            <ImageSwitcher />
+          </div>
+        </div>
 
 
         <AppleStyleCarousel />
@@ -1364,9 +1491,9 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
               style={{
-                padding: '3rem 2rem',
+                padding: '48px 32px',
                 background: 'var(--subtle-bg)',
-                borderRadius: '32px',
+                borderRadius: '8px',
                 border: '1px solid var(--card-border)',
                 position: 'relative',
                 overflow: 'hidden'
@@ -1773,6 +1900,373 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Breakout Mini Game Popup */}
+      <AnimatePresence>
+        {showGame && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0,0,0,0.85)',
+              zIndex: 1000,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backdropFilter: 'blur(10px)'
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              style={{
+                background: '#080810',
+                padding: '2rem',
+                borderRadius: '24px',
+                border: '1px solid rgba(254, 83, 45, 0.3)',
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '1.5rem',
+                boxShadow: '0 30px 60px rgba(0,0,0,0.5)'
+              }}
+            >
+              <button 
+                onClick={() => setShowGame(false)}
+                style={{
+                  position: 'absolute',
+                  top: '1rem',
+                  right: '1rem',
+                  background: 'none',
+                  border: 'none',
+                  color: '#fff',
+                  fontSize: '1.5rem',
+                  cursor: 'pointer',
+                  opacity: 0.5
+                }}
+              >
+                ✕
+              </button>
+              
+              <div style={{ textAlign: 'center' }}>
+                <h3 className="serif italic" style={{ fontSize: '1.5rem', color: '#FE532D', margin: 0 }}>Algorium Atari</h3>
+                <p style={{ fontSize: '0.7rem', opacity: 0.5, textTransform: 'uppercase', letterSpacing: '0.2em' }}>Hit all blocks to win</p>
+              </div>
+
+              <BreakoutGame />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
+
+// ── Algorium Pro Atari (Advanced Arkanoid Clone) ──
+const BreakoutGame = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Constants & Configuration
+    const CONFIG = {
+      ballSpeed: 4,
+      gravity: 0.1,
+      paddleSpeed: 0.2,
+      maxParticles: 50,
+      powerUpChance: 0.2
+    };
+
+    const COLORS = {
+      bg: '#080810',
+      primary: '#FE532D',
+      secondary: '#fff',
+      bricks: ['#FF1493', '#00BFFF', '#32CD32', '#FFD700', '#FF4500'],
+      glow: 'rgba(254, 83, 45, 0.4)'
+    };
+
+    // Types
+    interface Particle {
+      x: number; y: number; dx: number; dy: number; r: number; life: number; color: string;
+    }
+    interface Ball {
+      x: number; y: number; dx: number; dy: number; r: number; trail: {x: number, y: number}[]; active: boolean;
+    }
+    interface Brick {
+      x: number; y: number; w: number; h: number; status: number; color: string;
+    }
+    interface PowerUp {
+      x: number; y: number; type: 'WIDE' | 'MULTI' | 'SLOW'; dy: number; active: boolean;
+    }
+
+    // Game State
+    let balls: Ball[] = [{ x: canvas.width / 2, y: canvas.height - 50, dx: 4, dy: -4, r: 5, trail: [], active: true }];
+    let paddle = { x: canvas.width / 2 - 50, y: canvas.height - 25, w: 100, targetX: canvas.width / 2 - 50, h: 10 };
+    let bricks: Brick[] = [];
+    let particles: Particle[] = [];
+    let powerUps: PowerUp[] = [];
+    let score = 0;
+    let level = 1;
+    let lives = 3;
+    let started = false;
+    let shake = 0;
+    let frame = 0;
+
+    const initLevel = () => {
+      bricks = [];
+      const cols = 8;
+      const rows = 3 + level;
+      const pad = 8;
+      const w = (canvas.width - (cols + 1) * pad) / cols;
+      const h = 18;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          bricks.push({
+            x: c * (w + pad) + pad,
+            y: r * (h + pad) + 60,
+            w, h, status: 1,
+            color: COLORS.bricks[r % COLORS.bricks.length]
+          });
+        }
+      }
+    };
+
+    const spawnPowerUp = (x: number, y: number) => {
+      if (Math.random() < CONFIG.powerUpChance) {
+        const types: ('WIDE' | 'MULTI' | 'SLOW')[] = ['WIDE', 'MULTI', 'SLOW'];
+        powerUps.push({
+          x, y, 
+          type: types[Math.floor(Math.random() * types.length)],
+          dy: 2,
+          active: true
+        });
+      }
+    };
+
+    const explode = (x: number, y: number, color: string) => {
+      for (let i = 0; i < 12; i++) {
+        particles.push({
+          x, y,
+          dx: (Math.random() - 0.5) * 8,
+          dy: (Math.random() - 0.5) * 8,
+          r: Math.random() * 3 + 1,
+          life: 1,
+          color
+        });
+      }
+    };
+
+    const handleInput = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      paddle.targetX = e.clientX - rect.left - paddle.w / 2;
+    };
+
+    canvas.addEventListener('mousemove', handleInput);
+    canvas.addEventListener('click', () => { if (!started) started = true; });
+
+    initLevel();
+
+    const loop = () => {
+      frame++;
+      ctx.save();
+      
+      // Screen Shake
+      if (shake > 0) {
+        ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
+        shake *= 0.85;
+      }
+
+      // Background - Moving Grid
+      ctx.fillStyle = COLORS.bg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+      ctx.lineWidth = 1;
+      const scroll = (frame % 40) / 40 * 40;
+      for (let i = -40; i < canvas.width; i += 40) {
+        ctx.beginPath(); ctx.moveTo(i + scroll, 0); ctx.lineTo(i + scroll, canvas.height); ctx.stroke();
+      }
+      for (let j = -40; j < canvas.height; j += 40) {
+        ctx.beginPath(); ctx.moveTo(0, j + scroll); ctx.lineTo(canvas.width, j + scroll); ctx.stroke();
+      }
+
+      if (!started) {
+        ctx.fillStyle = COLORS.primary;
+        ctx.font = 'bold 24px Outfit';
+        ctx.textAlign = 'center';
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = COLORS.primary;
+        ctx.fillText('CLICK TO START', canvas.width / 2, canvas.height / 2 + 50);
+        ctx.shadowBlur = 0;
+      }
+
+      // Update Paddle
+      paddle.x += (paddle.targetX - paddle.x) * CONFIG.paddleSpeed;
+      paddle.x = Math.max(0, Math.min(canvas.width - paddle.w, paddle.x));
+      
+      ctx.beginPath();
+      ctx.roundRect(paddle.x, paddle.y, paddle.w, paddle.h, 5);
+      ctx.fillStyle = COLORS.secondary;
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = COLORS.secondary;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Update PowerUps
+      powerUps.forEach((p, idx) => {
+        if (!p.active) return;
+        p.y += p.dy;
+        
+        // Render
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+        ctx.fillStyle = COLORS.primary;
+        ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 8px Inter';
+        ctx.textAlign = 'center';
+        ctx.fillText(p.type[0], p.x, p.y + 3);
+
+        // Collect
+        if (p.y > paddle.y && p.y < paddle.y + paddle.h && p.x > paddle.x && p.x < paddle.x + paddle.w) {
+          p.active = false;
+          if (p.type === 'WIDE') {
+            paddle.w = 160;
+            setTimeout(() => paddle.w = 100, 8000);
+          } else if (p.type === 'MULTI') {
+            const b = balls[0];
+            balls.push({ ...b, dx: -b.dx, trail: [] });
+          } else if (p.type === 'SLOW') {
+            balls.forEach(b => { b.dx *= 0.5; b.dy *= 0.5; });
+            setTimeout(() => balls.forEach(b => { b.dx *= 2; b.dy *= 2; }), 5000);
+          }
+        }
+        if (p.y > canvas.height) p.active = false;
+      });
+
+      // Update Bricks
+      let remaining = 0;
+      bricks.forEach(b => {
+        if (b.status === 0) return;
+        remaining++;
+        ctx.beginPath();
+        ctx.roundRect(b.x, b.y, b.w, b.h, 4);
+        ctx.fillStyle = b.color;
+        ctx.fill();
+      });
+      if (remaining === 0) { level++; initLevel(); }
+
+      // Update Balls
+      balls.forEach((b, bIdx) => {
+        if (!b.active) return;
+        if (started) {
+          b.x += b.dx;
+          b.y += b.dy;
+        }
+
+        // Trails
+        b.trail.push({ x: b.x, y: b.y });
+        if (b.trail.length > 10) b.trail.shift();
+        b.trail.forEach((t, i) => {
+          ctx.globalAlpha = i / 20;
+          ctx.beginPath(); ctx.arc(t.x, t.y, b.r * (i/10), 0, Math.PI * 2);
+          ctx.fillStyle = COLORS.primary; ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+
+        // Wall Collisions
+        if (b.x + b.r > canvas.width || b.x - b.r < 0) b.dx *= -1;
+        if (b.y - b.r < 0) b.dy *= -1;
+
+        // Paddle Collision
+        if (b.y + b.r > paddle.y && b.y < paddle.y + paddle.h && b.x > paddle.x && b.x < paddle.x + paddle.w) {
+          const hit = (b.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2);
+          b.dx = hit * 5;
+          b.dy = -Math.abs(b.dy);
+          shake = 3;
+        }
+
+        // Brick Collision
+        bricks.forEach(br => {
+          if (br.status === 1 && b.x > br.x && b.x < br.x + br.w && b.y > br.y && b.y < br.y + br.h) {
+            br.status = 0;
+            b.dy *= -1;
+            score += 10;
+            shake = 5;
+            explode(br.x + br.w/2, br.y + br.h/2, br.color);
+            spawnPowerUp(br.x + br.w/2, br.y + br.h/2);
+          }
+        });
+
+        // Ball Lost
+        if (b.y > canvas.height) {
+          if (balls.length > 1) {
+            b.active = false;
+          } else {
+            lives--;
+            started = false;
+            b.x = canvas.width / 2; b.y = canvas.height - 50;
+            b.dx = 4; b.dy = -4;
+            if (lives <= 0) { score = 0; level = 1; lives = 3; started = false; initLevel(); }
+          }
+        }
+
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fillStyle = COLORS.primary;
+        ctx.shadowBlur = 10; ctx.shadowColor = COLORS.primary;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      // Particles
+      particles.forEach((p, idx) => {
+        p.x += p.dx; p.y += p.dy; p.life -= 0.02;
+        if (p.life <= 0) { particles.splice(idx, 1); return; }
+        ctx.globalAlpha = p.life;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color; ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+
+      // HUD
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 12px Inter';
+      ctx.textAlign = 'left';
+      ctx.fillText(`SCORE: ${score}`, 20, 30);
+      ctx.textAlign = 'right';
+      ctx.fillText(`LVL: ${level} | ${"❤️".repeat(lives)}`, canvas.width - 20, 30);
+
+      ctx.restore();
+      requestAnimationFrame(loop);
+    };
+
+    const animId = requestAnimationFrame(loop);
+    return () => {
+      canvas.removeEventListener('mousemove', handleInput);
+      cancelAnimationFrame(animId);
+    };
+  }, [level]);
+
+  return (
+    <canvas 
+      ref={canvasRef} 
+      width="540" 
+      height="400" 
+      style={{ 
+        background: '#080810', 
+        borderRadius: '20px',
+        cursor: 'none',
+        boxShadow: '0 0 40px rgba(0,0,0,0.5), inset 0 0 30px rgba(254, 83, 45, 0.1)'
+      }} 
+    />
+  );
+};
