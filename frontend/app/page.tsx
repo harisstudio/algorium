@@ -1,17 +1,8 @@
+"use client";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useMotionValue, useSpring, useScroll, useTransform, useInView, LayoutGroup } from "framer-motion";
 import Magnetic from "@/components/Magnetic";
-import { PortalProvider, usePortal } from "@/context/PortalContext";
-import PortalSidebar from "@/components/portal/PortalSidebar";
-import PortalHeader from "@/components/portal/PortalHeader";
-import DashboardView from "@/components/portal/Views/DashboardView";
-import FilesView from "@/components/portal/Views/FilesView";
-import FinanceView from "@/components/portal/Views/FinanceView";
-import MessageView from "@/components/portal/Views/MessageView";
-import SettingsView from "@/components/portal/Views/SettingsView";
-import AdminView from "@/components/portal/Views/AdminView";
-import { NotesView, PaymentModal } from "@/components/portal/Views/UtilityViews";
 
 // ── Warp-Speed Starfield (scroll-reactive) ──
 const Contact3DAnimation = () => {
@@ -888,115 +879,26 @@ const AppleStyleCarousel = () => {
   );
 };
 
-const PortalSystem = () => {
-  const { 
-    showPortal, 
-    portalStage, 
-    activeTab, 
-    toast, 
-    handleLogin, 
-    userRole 
-  } = usePortal();
-  
-  const [localClientData, setLocalClientData] = useState({ company: '', password: '' });
-  const darkMode = true; // Portal is locked to dark mode for elite aesthetic
-
-  return (
-    <>
-      <AnimatePresence>
-        {showPortal && (
-          <motion.div 
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.05 }}
-            style={{ 
-              position: 'fixed', 
-              inset: 0, 
-              zIndex: 9999, 
-              display: 'flex', 
-              background: '#000',
-              overflow: 'hidden',
-              fontFamily: 'var(--font-outfit)'
-            }}
-          >
-            {portalStage === 'dashboard' && <PortalSidebar darkMode={darkMode} />}
-
-            <div style={{ flex: 1, height: '100vh', display: 'flex', flexDirection: 'column', background: darkMode ? '#080810' : '#ffffff', position: 'relative', overflow: 'hidden' }}>
-              {portalStage === 'login' ? (
-                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ maxWidth: '400px', width: '100%', textAlign: 'center', padding: '2rem' }}>
-                    <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: '#fff', fontWeight: 800 }}>Access Portal</h2>
-                    <p style={{ opacity: 0.5, marginBottom: '3rem', color: '#fff' }}>Algorium Enterprise Synchronization</p>
-                    
-                    <input 
-                      type="text" 
-                      placeholder="Company Name"
-                      onChange={(e) => setLocalClientData({ ...localClientData, company: e.target.value })}
-                      style={{ width: '100%', padding: '20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '15px', color: '#fff', marginBottom: '1.2rem', outline: 'none' }}
-                    />
-                    <input 
-                      type="password" 
-                      placeholder="Access Code"
-                      onChange={(e) => setLocalClientData({ ...localClientData, password: e.target.value })}
-                      style={{ width: '100%', padding: '20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '15px', color: '#fff', marginBottom: '2.5rem', outline: 'none' }}
-                    />
-                    
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => handleLogin(localClientData)}
-                      style={{ width: '100%', padding: '22px', background: '#FE532D', color: '#fff', border: 'none', borderRadius: '15px', fontWeight: 800, cursor: 'pointer', fontSize: '1rem', boxShadow: '0 15px 30px rgba(254, 83, 45, 0.2)' }}
-                    >
-                      INITIALIZE SYNC
-                    </motion.button>
-                  </div>
-                </div>
-              ) : (
-                <div style={{ flex: 1, overflowY: 'auto', padding: '4rem 6rem' }}>
-                  <PortalHeader darkMode={darkMode} />
-                  
-                  {activeTab === 'Overview' && <DashboardView darkMode={darkMode} />}
-                  {activeTab === 'Drive Space' && <FilesView darkMode={darkMode} />}
-                  {activeTab === 'Invoices' && <FinanceView darkMode={darkMode} />}
-                  {activeTab === 'Messages' && <MessageView darkMode={darkMode} />}
-                  {activeTab === 'Notes' && <NotesView darkMode={darkMode} />}
-                  {activeTab === 'Settings' && <SettingsView darkMode={darkMode} />}
-                  {activeTab === 'Admin' && userRole === 'admin' && <AdminView darkMode={darkMode} />}
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <PaymentModal />
-
-      <AnimatePresence>
-        {toast.type && (
-          <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 50, opacity: 0 }} style={{ position: 'fixed', bottom: '40px', left: '50%', x: '-50%', padding: '16px 32px', background: toast.type === 'success' ? '#32d74b' : '#FE532D', color: '#fff', borderRadius: '50px', fontWeight: 800, fontSize: '0.9rem', boxShadow: '0 10px 40px rgba(0,0,0,0.3)', zIndex: 10001, display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
-            {toast.message}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-};
-
 export default function Home() {
-  return (
-    <PortalProvider>
-      <HomeContent />
-    </PortalProvider>
-  );
-}
+  const fadeInUp = {
+    initial: { opacity: 0, y: 60 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+    transition: { duration: 0.8, ease: "easeOut" } as any
+  };
 
-function HomeContent() {
-  const { setShowPortal } = usePortal();
+  const slogans = [
+    "Digital Elite",
+    "Creativity",
+    "Software",
+    "Graphic Design",
+    "Social Media",
+    "E-commerce"
+  ];
+
   const [index, setIndex] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [showGame, setShowGame] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -1006,20 +908,155 @@ function HomeContent() {
     message: ''
   });
   const [searchQuery, setSearchQuery] = useState('');
+  const [showGame, setShowGame] = useState(false);
+  const [showPortal, setShowPortal] = useState(false);
+  const [portalStage, setPortalStage] = useState<'login' | 'dashboard'>('login');
+  const [clientData, setClientData] = useState({ company: '', password: '' });
+  const [activeTab, setActiveTab] = useState<'Overview' | 'Drive Space' | 'Invoices' | 'Notes' | 'Admin'>('Overview');
+  const [activeProject, setActiveProject] = useState<any>(null);
+
+  // Portal Roles & Data
+  const [userRole, setUserRole] = useState<'admin' | 'client' | null>(null);
+  const [adminClients, setAdminClients] = useState<any[]>([]);
+
+  // Google Drive Style States
+  const [selectedFile, setSelectedFile] = useState<any>(null);
+  const [currentPath, setCurrentPath] = useState(['My Files']);
+  const [viewType, setViewType] = useState<'grid' | 'list'>('grid');
+  const [showInfoPanel, setShowInfoPanel] = useState(true);
+  const [showNewMenu, setShowNewMenu] = useState(false);
+  const [driveFiles, setDriveFiles] = useState<any[]>([]);
+  const [driveSearch, setDriveSearch] = useState('');
+  const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' | null }>({ message: '', type: null });
+
+  // Toast Helper
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast({ message: '', type: null }), 3000);
+  };
+
+  // Real System Login
+  const handlePortalLogin = async () => {
+    console.log("🔐 Attempting login for:", clientData.company);
+    
+    try {
+      const res = await fetch('http://localhost:3001/api/portal/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ company: clientData.company, password: clientData.password }),
+        mode: 'cors'
+      });
+      
+      const data = await res.json();
+      console.log("📡 API Response:", data);
+      
+      if (data.success) {
+        setUserRole(data.role);
+        setPortalStage('dashboard');
+        
+        if (data.role === 'admin') {
+          setActiveTab('Admin');
+          fetchAdminData();
+        } else {
+          setActiveProject(data.client);
+          setDriveFiles(data.client.files);
+        }
+        return;
+      }
+    } catch (err) {
+      console.warn("⚠️ API Unavailable, falling back to local simulation.", err);
+    }
+
+    // FALLBACK LOGIC - If API fails or backend is down
+    if (clientData.company === 'admin@algorium.uk' && clientData.password === 'admin') {
+      setUserRole('admin');
+      setPortalStage('dashboard');
+      setActiveTab('Admin');
+      // Set some demo data for admin
+      setAdminClients([
+        {
+          id: 'algorium_uk',
+          company: 'Algorium UK',
+          projectInfo: { name: 'Brand Identity', progress: 75 },
+          files: [{ name: 'logo.png', size: '2MB', type: 'Image' }],
+          invoices: [{ id: 'INV-101', amount: '£2500', status: 'Paid', date: '2026-04-10' }]
+        }
+      ]);
+      return;
+    }
+
+    if (clientData.company.toLowerCase() === 'algorium uk' && clientData.password === 'pass') {
+      const demoClient = {
+        id: 'algorium_uk',
+        company: 'Algorium UK',
+        projectInfo: { name: 'Brand Identity', progress: 75, deadline: '24 Jul 2026', roadmap: [] },
+        files: [
+          { name: 'Official Logo v2.png', size: '2.4 MB', type: 'Image' },
+          { name: 'Brand Guidelines.pdf', size: '12 MB', type: 'PDF' }
+        ],
+        invoices: [{ id: 'INV-001', amount: '£2,500', status: 'Paid', date: 'Jul 10, 2026' }]
+      };
+      setUserRole('client');
+      setActiveProject(demoClient);
+      setDriveFiles(demoClient.files);
+      setPortalStage('dashboard');
+      setActiveTab('Overview');
+      return;
+    }
+
+    alert("Giriş başarısız. Lütfen bilgilerinizi kontrol edin.\n(Admin: admin@algorium.uk / admin)\n(Müşteri: Algorium UK / pass)");
+  };
+
+  const fetchAdminData = async () => {
+    try {
+      const res = await fetch('http://localhost:3001/api/portal/data?role=admin');
+      const data = await res.json();
+      setAdminClients(data.clients);
+    } catch (err) { 
+      console.warn("⚠️ Using local client data for Admin view.");
+      setAdminClients([
+        {
+          id: 'algorium_uk',
+          company: 'Algorium UK',
+          projectInfo: { name: 'Brand Identity', progress: 75, deadline: '24 Jul 2026', roadmap: [] },
+          files: [
+            { name: 'logo.png', size: '2MB', type: 'Image' },
+            { name: 'guidelines.pdf', size: '12MB', type: 'PDF' }
+          ],
+          invoices: [{ id: 'INV-101', amount: '£2500', status: 'Paid', date: '2026-04-10' }]
+        }
+      ]);
+    }
+  };
+
+  const performAdminAction = async (clientId: string, type: string, actionData: any) => {
+    try {
+      const res = await fetch('http://localhost:3001/api/portal/admin/action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientId, type, data: actionData })
+      });
+      const data = await res.json();
+      console.log("📡 Action Success:", data);
+      showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} updated successfully.`);
+      fetchAdminData(); // Refresh
+    } catch (err) { 
+      console.error("Action Error - No Backend:", err);
+      // Local simulation for Admin
+      showToast(`Simulated: ${type} added (Local Mode)`, 'success');
+      if (type === 'invoice') {
+         const updatedClients = adminClients.map(c => 
+           c.id === clientId ? { ...c, invoices: [...c.invoices, actionData] } : c
+         );
+         setAdminClients(updatedClients);
+      }
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-
-  const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true },
-    transition: { duration: 0.8, ease: "easeOut" } as any
-  };
-
-  const slogans = ["Digital Elite", "Creativity", "Software", "Graphic Design", "Social Media", "E-commerce"];
 
   const handleInterestChange = (item: string) => {
     setFormData(prev => ({
@@ -2265,9 +2302,7 @@ function HomeContent() {
                     { name: 'Overview', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
                     { name: 'Drive Space', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> },
                     { name: 'Invoices', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h0M2 9.5h20"/></svg> },
-                    { name: 'Messages', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
                     { name: 'Notes', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
-                    { name: 'Settings', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1-2.83 0l-.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> },
                     ...(userRole === 'admin' ? [{ name: 'Admin', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg> }] : [])
                   ].map(item => (
                     <motion.div
@@ -2312,13 +2347,7 @@ function HomeContent() {
                  </div>
 
                 <button 
-                  onClick={() => { 
-                    localStorage.removeItem('algorium_portal_session');
-                    setShowPortal(false); 
-                    setPortalStage('login'); 
-                    setActiveProject(null); 
-                    setUserRole(null);
-                  }}
+                  onClick={() => { setShowPortal(false); setPortalStage('login'); setActiveProject(null); }}
                   style={{
                     width: '100%',
                     padding: '12px',
@@ -2391,7 +2420,222 @@ function HomeContent() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5rem', borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, paddingBottom: '3rem' }}>
                         <div>
                           <div style={{ fontSize: '0.8rem', color: '#FE532D', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{activeTab.replace(' Space', '')}</div>
-              <PortalSystem />
+                          <h1 style={{ fontSize: '3.5rem', fontWeight: 800, color: darkMode ? '#fff' : '#000', margin: 0 }}>{activeProject?.company}</h1>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ opacity: 0.5, fontSize: '0.85rem', color: darkMode ? '#fff' : '#000' }}>System Status</div>
+                          <div style={{ color: '#32d74b', fontWeight: 700, fontSize: '1.1rem' }}>● SYNCHRONIZED</div>
+                        </div>
+                    </div>
+
+                    {/* Conditional Tab Rendering */}
+                    {activeTab === 'Drive Space' && (
+                      <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flex: 1 }}>
+                            <h3 style={{ fontSize: '1.5rem', color: darkMode ? '#fff' : '#000', whiteSpace: 'nowrap' }}>Shared Documents</h3>
+                            <div style={{ position: 'relative', width: '300px' }}>
+                               <input 
+                                 type="text" 
+                                 placeholder="Search assets..." 
+                                 onChange={(e) => setDriveSearch(e.target.value)}
+                                 style={{ width: '100%', padding: '10px 15px 10px 40px', background: darkMode ? 'rgba(255,255,255,0.03)' : '#f8f8f8', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '10px', color: darkMode ? '#fff' : '#000', fontSize: '0.85rem' }} 
+                               />
+                               <svg style={{ position: 'absolute', left: '12px', top: '10px', opacity: 0.3 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            </div>
+                          </div>
+                          <button style={{ padding: '12px 28px', background: darkMode ? '#fff' : '#000', color: darkMode ? '#000' : '#fff', borderRadius: '30px', border: 'none', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer' }}>+ UPLOAD ASSETS</button>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '2rem' }}>
+                          {driveFiles.filter(f => f.name.toLowerCase().includes(driveSearch.toLowerCase())).map((file: any, i: number) => (
+                             <motion.div 
+                               key={i} 
+                               whileHover={{ y: -5, background: darkMode ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)' }}
+                               style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px', cursor: 'pointer' }}
+                             >
+                               <div style={{ width: '45px', height: '45px', background: 'rgba(254, 83, 45, 0.1)', borderRadius: '12px', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FE532D" strokeWidth="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                               </div>
+                               <div style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: '8px', color: darkMode ? '#fff' : '#000' }}>{file.name}</div>
+                               <div style={{ opacity: 0.4, fontSize: '0.85rem', color: darkMode ? '#fff' : '#000' }}>{file.size} • {file.type}</div>
+                             </motion.div>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {activeTab === 'Overview' && (
+                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                        <div style={{ marginBottom: '4rem' }}>
+                          <h4 style={{ fontSize: '0.9rem', color: '#FE532D', fontWeight: 600, marginBottom: '0.5rem' }}>DASHBOARD OVERVIEW</h4>
+                          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: darkMode ? '#fff' : '#000' }}>Welcome back, {activeProject?.company}</h2>
+                        </div>
+
+                        {/* Summary Cards Row */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '4rem' }}>
+                           <div style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px' }}>
+                              <div style={{ opacity: 0.5, fontSize: '0.75rem', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Project Phase</div>
+                              <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#FE532D' }}>{activeProject?.status} Build</div>
+                              <div style={{ marginTop: '0.8rem', fontSize: '0.8rem', opacity: 0.4 }}>Current focus: Core UI/UX Build</div>
+                           </div>
+                           <div style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px' }}>
+                              <div style={{ opacity: 0.5, fontSize: '0.75rem', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Total Progress</div>
+                              <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>{Math.round((activeProject?.timeline.filter((t: any) => t.completed).length / activeProject?.timeline.length) * 100)}%</div>
+                              <div style={{ width: '100%', height: '6px', background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', borderRadius: '3px', marginTop: '1.2rem', overflow: 'hidden' }}>
+                                 <motion.div 
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${(activeProject?.timeline.filter((t: any) => t.completed).length / activeProject?.timeline.length) * 100}%` }}
+                                    style={{ height: '100%', background: '#FE532D' }}
+                                 />
+                              </div>
+                           </div>
+                           <div style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px' }}>
+                              <div style={{ opacity: 0.5, fontSize: '0.75rem', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Next Delivery</div>
+                              <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>{activeProject?.timeline.find((t: any) => !t.completed)?.date || 'Completed'}</div>
+                              <div style={{ marginTop: '0.8rem', fontSize: '0.8rem', opacity: 0.4 }}>Mile: {activeProject?.timeline.find((t: any) => !t.completed)?.task || 'All delivered'}</div>
+                           </div>
+                        </div>
+
+                        {/* Main Grid: Timeline + Activity */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '3rem' }}>
+                           <div>
+                              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '2.5rem', color: darkMode ? '#fff' : '#000' }}>Recent Activity</h3>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                  {activeProject?.activityLog && activeProject.activityLog.length > 0 ? activeProject.activityLog.map((log: any) => (
+                                    <div key={log.id} style={{ padding: '1.5rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fff', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'}`, borderRadius: '20px', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                       <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(254,83,45,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FE532D" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                       </div>
+                                       <div>
+                                          <div style={{ fontWeight: 600, fontSize: '0.95rem', color: darkMode ? '#fff' : '#000' }}>{log.action}</div>
+                                          <div style={{ fontSize: '0.75rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>{log.date}</div>
+                                       </div>
+                                    </div>
+                                 )) : <div style={{ opacity: 0.3, color: darkMode ? '#fff' : '#000' }}>No recent activity to show.</div>}
+                              </div>
+                           </div>
+
+                           {/* Secondary Column: Progress Roadmap */}
+                           <div>
+                              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '2.5rem', color: darkMode ? '#fff' : '#000' }}>Roadmap status</h3>
+                              <div style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.01)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px', backdropFilter: 'blur(10px)' }}>
+                                 {activeProject?.projectInfo?.roadmap?.map((step: any, i: number) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                                       <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: step.status === 'completed' ? '#32d74b' : (step.status === 'current' ? '#FE532D' : 'rgba(255,255,255,0.1)') }} />
+                                       <span style={{ fontSize: '0.9rem', fontWeight: 500, opacity: step.status === 'pending' ? 0.4 : 1 }}>{step.phase}</span>
+                                    </div>
+                                 ))}
+                              </div>
+                           </div>
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {activeTab === 'Invoices' && (
+                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+                          <h3 style={{ fontSize: '1.5rem', color: darkMode ? '#fff' : '#000' }}>Financial Ledger</h3>
+                          <button 
+                             onClick={() => {
+                                if (userRole === 'admin') {
+                                   performAdminAction(activeProject.id, 'invoice', { 
+                                     id: `INV-${Math.floor(Math.random()*900)+100}`, 
+                                     amount: '£4,500', 
+                                     status: 'Pending', 
+                                     date: new Date().toLocaleDateString() 
+                                   });
+                                   alert('Invoice pushed to client portal.');
+                                } else {
+                                   alert('Contact your Account Manager for billing enquiries.');
+                                }
+                             }} 
+                             style={{ padding: '12px 28px', background: '#FE532D', color: '#fff', borderRadius: '30px', border: 'none', fontWeight: 700, fontSize: '0.85rem' }}>+ NEW INVOICE</button>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                           {activeProject?.invoices.map((inv: any, i: number) => (
+                             <div key={i} style={{ padding: '1.5rem 2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'}`, borderRadius: '15px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                               <div style={{ fontWeight: 700, color: '#FE532D' }}>{inv.id}</div>
+                               <div style={{ opacity: 0.5, color: darkMode ? '#fff' : '#000' }}>{inv.date}</div>
+                               <div style={{ fontWeight: 600, fontSize: '1.1rem', color: darkMode ? '#fff' : '#000' }}>{inv.amount}</div>
+                               <div style={{ fontSize: '0.75rem', fontWeight: 800, color: inv.status === 'Paid' ? '#32d74b' : '#FE532D' }}>{inv.status.toUpperCase()}</div>
+                             </div>
+                           ))}
+                        </div>
+                      </motion.div>
+                    )}
+
+                    {activeTab === 'Notes' && (
+                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                        <h3 style={{ fontSize: '1.5rem', color: darkMode ? '#fff' : '#000', marginBottom: '2rem' }}>Brief Documentation</h3>
+                        <textarea 
+                          defaultValue={activeProject?.notes}
+                          style={{ width: '100%', height: '400px', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px', padding: '2.5rem', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', lineHeight: '1.8', outline: 'none' }}
+                        />
+                      </motion.div>
+                    )}
+
+                    {activeTab === 'Admin' && userRole === 'admin' && (
+                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+                           <div>
+                              <h3 style={{ fontSize: '1.8rem', fontWeight: 800, color: darkMode ? '#fff' : '#000' }}>Agency Manager</h3>
+                              <p style={{ opacity: 0.5, color: darkMode ? '#fff' : '#000' }}>Overview of all client ecosystems and synchronization status.</p>
+                           </div>
+                           <div style={{ display: 'flex', gap: '15px' }}>
+                              <div style={{ padding: '15px 25px', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fff', borderRadius: '15px', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}` }}>
+                                 <div style={{ fontSize: '0.7rem', opacity: 0.5, textTransform: 'uppercase', color: darkMode ? '#fff' : '#000' }}>Active Clients</div>
+                                 <div style={{ fontSize: '1.2rem', fontWeight: 700, color: darkMode ? '#fff' : '#000' }}>{adminClients.length}</div>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div style={{ background: darkMode ? 'rgba(255,255,255,0.02)' : '#fff', borderRadius: '24px', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, overflow: 'hidden' }}>
+                           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                             <thead>
+                               <tr style={{ borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}` }}>
+                                 <th style={{ padding: '20px', fontSize: '0.8rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>CLIENT</th>
+                                 <th style={{ padding: '20px', fontSize: '0.8rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>PROJECT PROGRESS</th>
+                                 <th style={{ padding: '20px', fontSize: '0.8rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>FILES</th>
+                                 <th style={{ padding: '20px', fontSize: '0.8rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>ACTIONS</th>
+                               </tr>
+                             </thead>
+                             <tbody>
+                               {adminClients.map(client => (
+                                 <tr key={client.id} style={{ borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)'}` }}>
+                                   <td style={{ padding: '20px' }}>
+                                      <div style={{ fontWeight: 600, color: darkMode ? '#fff' : '#000' }}>{client.company}</div>
+                                      <div style={{ fontSize: '0.75rem', opacity: 0.5, color: darkMode ? '#fff' : '#000' }}>{client.projectInfo.name}</div>
+                                   </td>
+                                   <td style={{ padding: '20px' }}>
+                                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                         <div style={{ flex: 1, height: '6px', background: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+                                            <div style={{ width: `${client.projectInfo.progress}%`, height: '100%', background: '#FE532D' }} />
+                                         </div>
+                                         <span style={{ fontSize: '0.8rem', fontWeight: 700, color: darkMode ? '#fff' : '#000' }}>{client.projectInfo.progress}%</span>
+                                      </div>
+                                   </td>
+                                   <td style={{ padding: '20px' }}>
+                                      <span style={{ padding: '4px 10px', background: 'rgba(254, 83, 45, 0.1)', color: '#FE532D', borderRadius: '6px', fontSize: '0.8rem' }}>{client.files.length} Files</span>
+                                   </td>
+                                   <td style={{ padding: '20px' }}>
+                                      <div style={{ display: 'flex', gap: '10px' }}>
+                                         <button onClick={() => { setActiveProject(client); setPortalStage('dashboard'); setActiveTab('Overview'); }} style={{ padding: '8px 15px', background: 'transparent', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`, borderRadius: '8px', fontSize: '0.75rem', cursor: 'pointer', color: darkMode ? '#fff' : '#000' }}>View Client</button>
+                                         <button 
+                                            onClick={() => performAdminAction(client.id, 'invoice', { id: `INV-${Math.floor(Math.random()*900)+100}`, amount: '£1,200', status: 'Pending', date: new Date().toLocaleDateString() })}
+                                            style={{ padding: '8px 15px', background: '#FE532D', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}
+                                         >+ Invoice</button>
+                                      </div>
+                                   </td>
+                                 </tr>
+                               ))}
+                             </tbody>
+                           </table>
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
@@ -2425,50 +2669,6 @@ function HomeContent() {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
             {toast.message}
           </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Payment Simulation Modal */}
-      <AnimatePresence>
-        {showPaymentModal && (
-          <div style={{ position: 'fixed', inset: 0, zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-             <motion.div 
-               initial={{ opacity: 0 }} 
-               animate={{ opacity: 1 }} 
-               exit={{ opacity: 0 }} 
-               onClick={() => setShowPaymentModal(false)}
-               style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(10px)' }} 
-             />
-             <motion.div 
-               initial={{ y: 100, opacity: 0, scale: 0.9 }} 
-               animate={{ y: 0, opacity: 1, scale: 1 }}
-               exit={{ y: 100, opacity: 0, scale: 0.9 }}
-               style={{ width: '400px', background: '#0a0a0f', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '32px', padding: '40px', position: 'relative', zIndex: 1, textAlign: 'center' }}
-             >
-                <div style={{ width: '60px', height: '60px', borderRadius: '15px', background: 'rgba(254,83,45,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem' }}>
-                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FE532D" strokeWidth="2.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-                </div>
-                <h3 style={{ color: '#fff', fontSize: '1.5rem', fontWeight: 800, marginBottom: '1rem' }}>Secure Checkout</h3>
-                <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.9rem', marginBottom: '2.5rem' }}>Invoice: {pendingPayment?.id} <br/> Amount: {pendingPayment?.amount}</p>
-                
-                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '20px', borderRadius: '15px', marginBottom: '2rem', textAlign: 'left', border: '1px solid rgba(255,255,255,0.05)' }}>
-                   <div style={{ fontSize: '0.7rem', opacity: 0.4, marginBottom: '8px' }}>PAYING VIA</div>
-                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#fff', fontWeight: 600 }}>
-                      <div style={{ width: '32px', height: '20px', background: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px' }} />
-                      Apple Pay / Card ending in 4242
-                   </div>
-                </div>
-
-                <motion.button 
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handlePaymentSuccess}
-                  style={{ width: '100%', padding: '18px', background: '#fff', color: '#000', borderRadius: '15px', fontWeight: 800, fontSize: '1rem', border: 'none', cursor: 'pointer' }}
-                >
-                  PAY WITH TOUCH ID
-                </motion.button>
-                <button onClick={() => setShowPaymentModal(false)} style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.3)', marginTop: '1.5rem', fontSize: '0.8rem', cursor: 'pointer' }}>Cancel Payment</button>
-             </motion.div>
-          </div>
         )}
       </AnimatePresence>
     </div>
@@ -2716,3 +2916,27 @@ const BreakoutGame = () => {
   );
 };
 
+// ── Mock Database for Client Portal ──
+const PROJECTS_DB = [
+  {
+    company: "Algorium",
+    code: "2026",
+    status: "Active",
+    timeline: [
+      { date: "May 2026", task: "Digitization Strategy", completed: true },
+      { date: "June 2026", task: "Core UI/UX Build", completed: true },
+      { date: "July 2026", task: "AI Solution Integration", completed: false },
+      { date: "August 2026", task: "Final Deployment", completed: false }
+    ],
+    drive: [
+      { name: "Brand_Assets.zip", size: "45MB", type: "Client Data", date: "2026-04-10" },
+      { name: "Project_Brief_V2.pdf", size: "1.2MB", type: "Brief", date: "2026-04-12" },
+      { name: "Iteration_Screens_01.jpg", size: "8MB", type: "Design", date: "2026-04-15" }
+    ],
+    invoices: [
+      { id: "INV-001", amount: "$12,500", status: "Paid", date: "2026-03-01" },
+      { id: "INV-002", amount: "$8,000", status: "Pending", date: "2026-04-15" }
+    ],
+    notes: "Ensure the transition animations match the Apple standard."
+  }
+];

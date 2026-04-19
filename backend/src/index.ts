@@ -37,9 +37,6 @@ let PORTAL_DATA = {
       activityLog: [
         { id: 1, action: 'Project Synchronized', date: '2026-04-16 14:00', icon: 'sync' },
         { id: 2, action: 'Initial Brand Strategy shared', date: '2026-04-15 09:30', icon: 'file' },
-      ],
-      messages: [
-        { id: 1, sender: 'Algorium Team', text: 'Welcome to your project portal! Initial design mockups are now available in the Drive.', date: '2026-04-16 09:00' }
       ]
     }
   ],
@@ -53,7 +50,7 @@ let PORTAL_DATA = {
 app.get('/', (c) => {
   return c.json({
     message: 'Algorium UK Portal API - Live',
-    version: '1.4.0',
+    version: '1.3.0',
     roles: ['admin', 'client']
   })
 })
@@ -127,24 +124,6 @@ app.post('/api/portal/admin/action', async (c) => {
   }
 
   return c.json({ success: true, updatedClient: PORTAL_DATA.clients[clientIndex] })
-})
-
-// Communication: Send Message
-app.post('/api/portal/message', async (c) => {
-  const { clientId, sender, text } = await c.req.json()
-  const clientIndex = PORTAL_DATA.clients.findIndex(cl => cl.id === clientId)
-  
-  if (clientIndex === -1) return c.json({ success: false, message: 'Client not found' }, 404)
-
-  const newMessage = {
-    id: Date.now(),
-    sender,
-    text,
-    date: new Date().toLocaleString()
-  }
-
-  PORTAL_DATA.clients[clientIndex].messages.push(newMessage)
-  return c.json({ success: true, message: newMessage })
 })
 
 // Existing API routes...
