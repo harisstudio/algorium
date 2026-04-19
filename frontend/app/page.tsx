@@ -269,7 +269,7 @@ const StarField = () => {
   );
 };
 
-const ImageSwitcher = () => {
+const ImageSwitcher = ({ isMobile }: { isMobile?: boolean }) => {
   const images = [
     '/assets/images/porsche_final.png',
     '/assets/images/macintosh_final.png',
@@ -286,11 +286,12 @@ const ImageSwitcher = () => {
 
   return (
     <div style={{ 
-      width: '650px', 
-      height: '400px', 
+      width: isMobile ? '100%' : '650px', 
+      height: isMobile ? '280px' : '400px', 
       position: 'relative',
       userSelect: 'none',
-      pointerEvents: 'none'
+      pointerEvents: 'none',
+      margin: isMobile ? '2rem 0' : '0'
     }}>
       <AnimatePresence mode="wait">
         <motion.div
@@ -322,7 +323,7 @@ const ImageSwitcher = () => {
   );
 };
 
-const AnalogClock = ({ city, timeZone }: { city: string, timeZone: string }) => {
+const AnalogClock = ({ city, timeZone, isMobile }: { city: string, timeZone: string, isMobile?: boolean }) => {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -348,10 +349,10 @@ const AnalogClock = ({ city, timeZone }: { city: string, timeZone: string }) => 
   const hoursDeg = (hour % 12 / 12) * 360 + (minute / 60) * 30;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: isMobile ? '0.4rem' : '0.6rem' }}>
       <div style={{ 
-        width: '60px', 
-        height: '60px', 
+        width: isMobile ? '50px' : '60px', 
+        height: isMobile ? '50px' : '60px', 
         borderRadius: '50%', 
         border: '1.5px solid var(--card-border)', 
         position: 'relative',
@@ -369,7 +370,7 @@ const AnalogClock = ({ city, timeZone }: { city: string, timeZone: string }) => 
             width: i % 3 === 0 ? '1.5px' : '0.8px',
             height: i % 3 === 0 ? '5px' : '3px',
             background: i % 3 === 0 ? 'var(--text-color)' : 'var(--card-border)',
-            transform: `rotate(${i * 30}deg) translateY(-26px)`,
+            transform: `rotate(${i * 30}deg) translateY(${isMobile ? '-21px' : '-26px'})`,
             borderRadius: '1px'
           }} />
         ))}
@@ -377,7 +378,7 @@ const AnalogClock = ({ city, timeZone }: { city: string, timeZone: string }) => 
         <div style={{ 
           position: 'absolute',
           width: '2.5px',
-          height: '15px',
+          height: isMobile ? '12px' : '15px',
           background: 'var(--text-color)',
           bottom: '50%',
           transformOrigin: 'bottom center',
@@ -389,7 +390,7 @@ const AnalogClock = ({ city, timeZone }: { city: string, timeZone: string }) => 
         <div style={{ 
           position: 'absolute',
           width: '1.5px',
-          height: '22px',
+          height: isMobile ? '18px' : '22px',
           background: 'var(--text-color)',
           bottom: '50%',
           transformOrigin: 'bottom center',
@@ -411,7 +412,7 @@ const AnalogClock = ({ city, timeZone }: { city: string, timeZone: string }) => 
             left: '50%',
             bottom: '50%',
             width: '0.8px',
-            height: '24px',
+            height: isMobile ? '20px' : '24px',
             background: '#FE532D',
             transform: 'translateX(-50%)',
           }} />
@@ -421,7 +422,7 @@ const AnalogClock = ({ city, timeZone }: { city: string, timeZone: string }) => 
             left: '50%',
             top: '50%',
             width: '1.5px',
-            height: '7px',
+            height: isMobile ? '5px' : '7px',
             background: '#FE532D',
             transform: 'translateX(-50%)',
             borderRadius: '0 0 1px 1px'
@@ -431,8 +432,8 @@ const AnalogClock = ({ city, timeZone }: { city: string, timeZone: string }) => 
         <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#FE532D', zIndex: 4, boxShadow: '0 0 0 1px #fff' }} />
       </div>
       <div style={{ textAlign: 'center' }}>
-        <p style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.15em', opacity: 0.35, margin: 0, fontWeight: 700 }}>{city}</p>
-        <p style={{ fontSize: '0.7rem', fontWeight: 600, margin: 0, opacity: 0.7, fontFamily: 'var(--font-inter)', letterSpacing: '0.05em' }}>
+        <p style={{ fontSize: isMobile ? '0.5rem' : '0.6rem', textTransform: 'uppercase', letterSpacing: '0.15em', opacity: 0.35, margin: 0, fontWeight: 700 }}>{city}</p>
+        <p style={{ fontSize: isMobile ? '0.6rem' : '0.7rem', fontWeight: 600, margin: 0, opacity: 0.7, fontFamily: 'var(--font-inter)', letterSpacing: '0.05em' }}>
           {hour.toString().padStart(2, '0')}:{minute.toString().padStart(2, '0')}
         </p>
       </div>
@@ -441,7 +442,7 @@ const AnalogClock = ({ city, timeZone }: { city: string, timeZone: string }) => 
 };
 
 
-const SpotlightCard = ({ title, desc, tag, col }: any) => {
+const SpotlightCard = ({ title, desc, tag, col, isMobile }: any) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState(0);
 
@@ -487,10 +488,10 @@ const SpotlightCard = ({ title, desc, tag, col }: any) => {
   return (
     <motion.div 
       style={{ 
-        gridColumn: col, 
+        gridColumn: isMobile ? 'span 12' : col, 
         position: 'relative', 
         overflow: 'hidden', 
-        padding: '64px', 
+        padding: isMobile ? '32px' : '64px', 
         background: 'var(--card-bg)',
         borderRadius: '12px',
         border: '1px solid var(--card-border)',
@@ -567,7 +568,7 @@ const projects = [
   { id: 'vertex', name: 'Vertex Capital', category: 'Fintech UX', year: '2023', color: '#f8f9fa', image: '/projects/vertex.png', desc: 'Redesigning the trading experience for 50,000+ active institutional investors.' },
 ];
 
-const ProjectRow = ({ project, index }: { project: typeof projects[0], index: number }) => {
+const ProjectRow = ({ project, index, isMobile }: { project: typeof projects[0], index: number, isMobile?: boolean }) => {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -589,13 +590,15 @@ const ProjectRow = ({ project, index }: { project: typeof projects[0], index: nu
     >
       <div style={{
         display: 'flex',
-        alignItems: 'baseline',
+        flexDirection: isMobile ? 'column' : 'row',
+        alignItems: isMobile ? 'flex-start' : 'baseline',
         justifyContent: 'space-between',
         width: '100%',
         position: 'relative',
-        zIndex: 2
+        zIndex: 2,
+        gap: isMobile ? '1.5rem' : '0'
       }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '3rem' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: isMobile ? '1.5rem' : '3rem' }}>
           <span style={{ 
             fontSize: '1rem', 
             opacity: 0.3, 
@@ -623,9 +626,14 @@ const ProjectRow = ({ project, index }: { project: typeof projects[0], index: nu
           </motion.h3>
         </div>
 
-        <div style={{ display: 'flex', gap: '3rem', alignItems: 'center', textAlign: 'right' }}>
+        <div style={{ 
+          display: 'flex', 
+          gap: isMobile ? '1.5rem' : '3rem', 
+          alignItems: 'center', 
+          textAlign: isMobile ? 'left' : 'right' 
+        }}>
           <span style={{ 
-            fontSize: '0.85rem', 
+            fontSize: isMobile ? '0.75rem' : '0.85rem', 
             textTransform: 'uppercase', 
             letterSpacing: '0.15em', 
             opacity: 0.4, 
@@ -635,7 +643,7 @@ const ProjectRow = ({ project, index }: { project: typeof projects[0], index: nu
             {project.category}
           </span>
           <span style={{ 
-            fontSize: '0.85rem', 
+            fontSize: isMobile ? '0.75rem' : '0.85rem', 
             opacity: 0.2, 
             fontWeight: 600,
             minWidth: '40px' 
@@ -645,9 +653,30 @@ const ProjectRow = ({ project, index }: { project: typeof projects[0], index: nu
         </div>
       </div>
 
-      {/* Floating Reveal Image */}
+      {/* Mobile Project Image - Visible on mobile below title */}
+      {isMobile && (
+        <div style={{ 
+          marginTop: '2rem', 
+          width: '100%', 
+          aspectRatio: '4/3', 
+          position: 'relative', 
+          borderRadius: '12px', 
+          overflow: 'hidden',
+          border: '1px solid var(--card-border)'
+        }}>
+          <Image 
+            src={project.image} 
+            alt={project.name} 
+            fill 
+            style={{ objectFit: 'cover' }} 
+            priority
+          />
+        </div>
+      )}
+
+      {/* Floating Reveal Image - Desktop Only */}
       <AnimatePresence>
-        {hovered && (
+        {!isMobile && hovered && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8, rotate: -3 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -1121,6 +1150,7 @@ export default function Home() {
   const [navVisible, setNavVisible] = useState(true);
   const lastScrollY = useRef(0);
   const [darkMode, setDarkMode] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [lang, setLang] = useState('EN'); // EN, TR, DE
 
   const languages = ['EN', 'TR', 'DE'];
@@ -1136,8 +1166,18 @@ export default function Home() {
       }
       lastScrollY.current = currentY;
     };
+    
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', checkMobile);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   return (
@@ -1178,129 +1218,132 @@ export default function Home() {
           />
         </div>
 
-        {/* Search Bar — Centered */}
-        <div style={{ 
-          flex: 1, 
-          maxWidth: '400px', 
-          margin: '0 2rem', 
-          position: 'relative',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <input 
-            type="text"
-            placeholder="Search expertise, projects..."
-            value={searchQuery}
-            onChange={(e) => {
-              const val = e.target.value;
-              setSearchQuery(val);
-              if (val.toLowerCase() === 'file') {
-                setShowPortal(true);
-                setSearchQuery(''); // Clear it so it feels like a command
-              }
-            }}
-            style={{
-              width: '100%',
-              padding: '10px 170px 10px 45px',
-              borderRadius: '30px',
-              background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
-              border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`,
-              color: 'var(--text-color)',
-              fontSize: '0.85rem',
-              outline: 'none',
-              transition: 'all 0.3s ease',
-              fontFamily: 'var(--font-inter)'
-            }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = '#FE532D')}
-            onBlur={(e) => (e.currentTarget.style.borderColor = darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)')}
-          />
-          <svg 
-            style={{ position: 'absolute', left: '18px', opacity: darkMode ? 0.8 : 0.4, transition: 'color 0.4s ease' }} 
-            width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={darkMode ? '#FE532D' : 'currentColor'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          
-          <div style={{ position: 'absolute', right: '6px', display: 'flex', gap: '6px' }}>
-            {/* Quick Action Button — GAME */}
-            <motion.button
-              onClick={() => setShowGame(true)}
-              whileHover={{ scale: 1.05, filter: 'brightness(1.1)' }}
-              whileTap={{ scale: 0.95 }}
+        {/* Search Bar — Hidden on Mobile */}
+        {!isMobile && (
+          <div style={{ 
+            flex: 1, 
+            maxWidth: '400px', 
+            margin: '0 2rem', 
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center'
+          }}>
+            <input 
+              type="text"
+              placeholder="Search expertise, projects..."
+              value={searchQuery}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSearchQuery(val);
+                if (val.toLowerCase() === 'file') {
+                  setShowPortal(true);
+                  setSearchQuery(''); // Clear it so it feels like a command
+                }
+              }}
               style={{
-                background: '#FE532D',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '20px',
-                padding: '6px 12px',
-                fontSize: '0.65rem',
-                fontWeight: 800,
-                letterSpacing: '0.1em',
-                cursor: 'pointer',
-                boxShadow: '0 2px 10px rgba(254, 83, 45, 0.3)',
+                width: '100%',
+                padding: '10px 170px 10px 45px',
+                borderRadius: '30px',
+                background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+                border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`,
+                color: 'var(--text-color)',
+                fontSize: '0.85rem',
+                outline: 'none',
+                transition: 'all 0.3s ease',
                 fontFamily: 'var(--font-inter)'
               }}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#FE532D')}
+              onBlur={(e) => (e.currentTarget.style.borderColor = darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)')}
+            />
+            <svg 
+              style={{ position: 'absolute', left: '18px', opacity: darkMode ? 0.8 : 0.4, transition: 'color 0.4s ease' }} 
+              width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={darkMode ? '#FE532D' : 'currentColor'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
             >
-              GAME
-            </motion.button>
-
-            {/* Quick Action Button — CUSTOMER */}
-            <motion.button
-              onClick={() => setShowPortal(true)}
-              whileHover={{ scale: 1.05, filter: 'brightness(1.1)' }}
-              whileTap={{ scale: 0.95 }}
-              style={{
-                background: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.8)',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '20px',
-                padding: '6px 12px',
-                fontSize: '0.65rem',
-                fontWeight: 800,
-                letterSpacing: '0.1em',
-                cursor: 'pointer',
-                fontFamily: 'var(--font-inter)'
-              }}
-            >
-              CUSTOMER
-            </motion.button>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          {/* Language Selector */}
-          <div style={{ display: 'flex', gap: '0.4rem', marginRight: '0.5rem' }}>
-            {languages.map((l) => (
-              <button
-                key={l}
-                onClick={() => setLang(l)}
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            
+            <div style={{ position: 'absolute', right: '6px', display: 'flex', gap: '6px' }}>
+              <motion.button
+                onClick={() => setShowGame(true)}
+                whileHover={{ scale: 1.05, filter: 'brightness(1.1)' }}
+                whileTap={{ scale: 0.95 }}
                 style={{
-                  background: 'none',
+                  background: '#FE532D',
+                  color: '#fff',
                   border: 'none',
-                  fontSize: '0.7rem',
-                  fontWeight: 700,
+                  borderRadius: '20px',
+                  padding: '6px 12px',
+                  fontSize: '0.65rem',
+                  fontWeight: 800,
+                  letterSpacing: '0.1em',
                   cursor: 'pointer',
-                  color: lang === l ? '#FE532D' : 'var(--text-color)',
-                  opacity: lang === l ? 1 : 0.4,
-                  padding: '4px',
-                  transition: 'all 0.3s ease'
+                  boxShadow: '0 2px 10px rgba(254, 83, 45, 0.3)',
+                  fontFamily: 'var(--font-inter)'
                 }}
               >
-                {l}
-              </button>
-            ))}
-          </div>
+                GAME
+              </motion.button>
 
-          <div style={{ width: '1px', height: '16px', background: 'var(--divider)', marginRight: '0.5rem' }} />
+              <motion.button
+                onClick={() => setShowPortal(true)}
+                whileHover={{ scale: 1.05, filter: 'brightness(1.1)' }}
+                whileTap={{ scale: 0.95 }}
+                style={{
+                  background: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.8)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '20px',
+                  padding: '6px 12px',
+                  fontSize: '0.65rem',
+                  fontWeight: 800,
+                  letterSpacing: '0.1em',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-inter)'
+                }}
+              >
+                CUSTOMER
+              </motion.button>
+            </div>
+          </div>
+        )}
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '0.5rem' : '1.5rem' }}>
+          {/* Language Selector — Hidden on Mobile */}
+          {!isMobile && (
+            <>
+              <div style={{ display: 'flex', gap: '0.4rem', marginRight: '0.5rem' }}>
+                {languages.map((l) => (
+                  <button
+                    key={l}
+                    onClick={() => setLang(l)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      color: lang === l ? '#FE532D' : 'var(--text-color)',
+                      opacity: lang === l ? 1 : 0.4,
+                      padding: '4px',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    {l}
+                  </button>
+                ))}
+              </div>
+              <div style={{ width: '1px', height: '16px', background: 'var(--divider)', marginRight: '0.5rem' }} />
+            </>
+          )}
 
           {/* iOS Dark Mode Toggle */}
           <button
             onClick={() => setDarkMode(!darkMode)}
             aria-label="Toggle dark mode"
             style={{
-              width: '44px',
-              height: '24px',
+              width: isMobile ? '38px' : '44px',
+              height: isMobile ? '20px' : '24px',
               borderRadius: '12px',
               border: 'none',
               background: darkMode ? '#FE532D' : 'rgba(0,0,0,0.12)',
@@ -1312,11 +1355,11 @@ export default function Home() {
             }}
           >
             <motion.div
-              animate={{ x: darkMode ? 20 : 0 }}
+              animate={{ x: darkMode ? (isMobile ? 18 : 20) : 0 }}
               transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               style={{
-                width: '20px',
-                height: '20px',
+                width: isMobile ? '16px' : '20px',
+                height: isMobile ? '16px' : '20px',
                 borderRadius: '50%',
                 background: '#fff',
                 position: 'absolute',
@@ -1391,6 +1434,24 @@ export default function Home() {
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {/* Mobile Specific Buttons */}
+                {isMobile && (
+                  <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+                    <motion.button 
+                      onClick={() => { setShowGame(true); setMenuOpen(false); }}
+                      style={{ flex: 1, background: '#FE532D', color: '#fff', border: 'none', borderRadius: '8px', padding: '12px', fontWeight: 800, fontSize: '0.8rem', letterSpacing: '0.1em' }}
+                    >
+                      GAME
+                    </motion.button>
+                    <motion.button 
+                      onClick={() => { setShowPortal(true); setMenuOpen(false); }}
+                      style={{ flex: 1, background: darkMode ? 'rgba(255,255,255,0.1)' : '#111', color: '#fff', border: 'none', borderRadius: '8px', padding: '12px', fontWeight: 800, fontSize: '0.8rem', letterSpacing: '0.1em' }}
+                    >
+                      CUSTOMER
+                    </motion.button>
+                  </div>
+                )}
+
                 {[
                   { label: 'Expertise', href: '#expertise' },
                   { label: 'Portfolio', href: '#work' },
@@ -1406,7 +1467,7 @@ export default function Home() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.06 }}
                     style={{ 
-                      fontSize: '2rem', 
+                      fontSize: isMobile ? '1.5rem' : '2rem', 
                       fontFamily: 'var(--font-outfit)',
                       fontWeight: 700,
                       textDecoration: 'none', 
@@ -1429,6 +1490,29 @@ export default function Home() {
                 transition={{ delay: 0.4 }}
                 style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
               >
+                {isMobile && (
+                  <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+                    {languages.map((l) => (
+                      <button
+                        key={l}
+                        onClick={() => setLang(l)}
+                        style={{
+                          background: lang === l ? '#FE532D' : 'rgba(0,0,0,0.05)',
+                          border: 'none',
+                          borderRadius: '4px',
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          color: lang === l ? '#fff' : 'var(--text-color)',
+                          padding: '6px 12px',
+                          transition: 'all 0.3s ease'
+                        }}
+                      >
+                        {l}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 <a href="mailto:hello@algorium.co.uk" style={{ color: '#FE532D', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600 }}>hello@algorium.co.uk</a>
                 <p style={{ fontSize: '0.8rem', opacity: 0.4, lineHeight: 1.5, color: darkMode ? '#fff' : '#111' }}>
                   71-75 Shelton Street, Covent Garden<br />London, WC2H 9JQ
@@ -1497,31 +1581,33 @@ export default function Home() {
         
         <div style={{ position: 'relative', width: '100%', maxWidth: '1400px', marginTop: '0.5rem' }}>
           <motion.div {...fadeInUp} style={{ maxWidth: '700px' }}>
-            <p style={{ fontSize: '1.85rem', fontWeight: 500, lineHeight: 1.3, marginBottom: '3rem' }}>
+            <p style={{ fontSize: isMobile ? '1.2rem' : '1.85rem', fontWeight: 500, lineHeight: 1.3, marginBottom: isMobile ? '2rem' : '3rem' }}>
               We design and build bespoke digital ecosystems for brands that refuse to settle for the ordinary.
             </p>
             
             {/* Clocks strictly below the description */}
-            <div style={{ display: 'flex', gap: '2.5rem', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
-              <AnalogClock city="Tokyo" timeZone="Asia/Tokyo" />
-              <AnalogClock city="Hong Kong" timeZone="Asia/Hong_Kong" />
-              <AnalogClock city="Delhi" timeZone="Asia/Kolkata" />
-              <AnalogClock city="Istanbul" timeZone="Europe/Istanbul" />
-              <AnalogClock city="London" timeZone="Europe/London" />
-              <AnalogClock city="New York" timeZone="America/New_York" />
+            <div style={{ display: 'flex', gap: isMobile ? '1.5rem' : '2.5rem', flexWrap: 'wrap', justifyContent: isMobile ? 'center' : 'flex-start' }}>
+              <AnalogClock city="Tokyo" timeZone="Asia/Tokyo" isMobile={isMobile} />
+              <AnalogClock city="Hong Kong" timeZone="Asia/Hong_Kong" isMobile={isMobile} />
+              <AnalogClock city="Delhi" timeZone="Asia/Kolkata" isMobile={isMobile} />
+              <AnalogClock city="Istanbul" timeZone="Europe/Istanbul" isMobile={isMobile} />
+              <AnalogClock city="London" timeZone="Europe/London" isMobile={isMobile} />
+              <AnalogClock city="New York" timeZone="America/New_York" isMobile={isMobile} />
             </div>
           </motion.div>
 
-          {/* Objects Showcase: Floating on the far right */}
+          {/* Objects Showcase: Floating on the far right on desktop, below on mobile */}
           <div style={{ 
-            position: 'absolute', 
-            top: '50%', 
-            right: '-4vw', 
-            transform: 'translateY(-50%)',
+            position: isMobile ? 'relative' : 'absolute', 
+            top: isMobile ? '0' : '50%', 
+            right: isMobile ? '0' : '-4vw', 
+            transform: isMobile ? 'none' : 'translateY(-50%)',
             pointerEvents: 'none',
-            zIndex: 1
+            zIndex: 1,
+            display: 'flex',
+            justifyContent: 'center'
           }}>
-            <ImageSwitcher />
+            <ImageSwitcher isMobile={isMobile} />
           </div>
         </div>
 
@@ -1550,17 +1636,17 @@ export default function Home() {
       </section>
 
       {/* Expertise Section */}
-      <section id="services" style={{ padding: '128px 0' }}>
+      <section id="services" style={{ padding: isMobile ? '64px 0' : '128px 0' }}>
         <motion.div {...fadeInUp} style={{ marginBottom: '64px' }}>
           <p style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.15em', opacity: 0.5, marginBottom: '32px' }}>What We Do</p>
-          <h2 style={{ fontSize: '3rem', fontFamily: 'var(--font-outfit)', fontWeight: 800 }}>Expertise</h2>
+          <h2 style={{ fontSize: isMobile ? '2rem' : '3rem', fontFamily: 'var(--font-outfit)', fontWeight: 800 }}>Expertise</h2>
         </motion.div>
-        <div className="line-detail" style={{ opacity: 0.2, marginBottom: '128px' }} />
+        <div className="line-detail" style={{ opacity: 0.2, marginBottom: isMobile ? '64px' : '128px' }} />
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '4rem' }}>
-          <SpotlightCard title="Brand & <br />Product Design" desc="Visual identities and user interfaces that command attention and respect." tag="s1" col="1 / 5" />
-          <SpotlightCard title="High-End <br />Engineering" desc="Scalable web and mobile applications built with precision and edge-ready speed." tag="s2" col="5 / 9" />
-          <SpotlightCard title="AI & <br />Intelligence" desc="Leveraging predictive models and generative AI to create smart, results-driven experiences." tag="s4" col="9 / 13" />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: isMobile ? '2rem' : '4rem' }}>
+          <SpotlightCard title="Brand & <br />Product Design" desc="Visual identities and user interfaces that command attention and respect." tag="s1" col="1 / 5" isMobile={isMobile} />
+          <SpotlightCard title="High-End <br />Engineering" desc="Scalable web and mobile applications built with precision and edge-ready speed." tag="s2" col="5 / 9" isMobile={isMobile} />
+          <SpotlightCard title="AI & <br />Intelligence" desc="Leveraging predictive models and generative AI to create smart, results-driven experiences." tag="s4" col="9 / 13" isMobile={isMobile} />
         </div>
       </section>
 
@@ -1576,25 +1662,30 @@ export default function Home() {
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {projects.map((project, i) => (
-            <ProjectRow key={project.name} project={project} index={i} />
+            <ProjectRow key={project.name} project={project} index={i} isMobile={isMobile} />
           ))}
         </div>
       </section>
 
       {/* Stats Section */}
       <section style={{ 
-        padding: '128px 0', 
+        padding: isMobile ? '64px 0' : '128px 0', 
         background: 'var(--bg-color)',
         borderTop: '1px solid var(--divider)'
       }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '4rem' }}>
-          <div style={{ gridColumn: '1 / 5' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: isMobile ? '2rem' : '4rem' }}>
+          <div style={{ gridColumn: isMobile ? 'span 12' : '1 / 5' }}>
             <h5 style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.2em', opacity: 0.8, marginBottom: '1.5rem', color: 'var(--text-color)' }}>Metrics</h5>
-            <p style={{ fontSize: '1.25rem', lineHeight: 1.5, opacity: 0.7 }}>
+            <p style={{ fontSize: isMobile ? '1.1rem' : '1.25rem', lineHeight: 1.5, opacity: 0.7 }}>
               Our engineering philosophy is built on absolute precision and measurable impact.
             </p>
           </div>
-          <div style={{ gridColumn: '6 / 13', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
+          <div style={{ 
+            gridColumn: isMobile ? 'span 12' : '6 / 13', 
+            display: 'grid', 
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', 
+            gap: '2rem' 
+          }}>
             {[
               { label: 'Successful Launches', value: '140+' },
               { label: 'Global Partners', value: '45' },
@@ -1608,7 +1699,7 @@ export default function Home() {
                 transition={{ delay: i * 0.1 }}
                 style={{ borderLeft: '1px solid var(--card-border)', paddingLeft: '2rem' }}
               >
-                <h4 style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--text-color)', marginBottom: '0.5rem' }}>{stat.value}</h4>
+                <h4 style={{ fontSize: isMobile ? '2rem' : '3rem', fontWeight: 800, color: 'var(--text-color)', marginBottom: '0.5rem' }}>{stat.value}</h4>
                 <p style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.4 }}>{stat.label}</p>
               </motion.div>
             ))}
@@ -1617,10 +1708,10 @@ export default function Home() {
       </section>
 
       {/* Team Section */}
-      <section id="team" style={{ padding: '128px 0' }}>
+      <section id="team" style={{ padding: isMobile ? '64px 0' : '128px 0' }}>
         <motion.div {...fadeInUp} style={{ marginBottom: '64px' }}>
           <p style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.15em', opacity: 0.5, marginBottom: '32px' }}>The Human Edge</p>
-          <h2 style={{ fontSize: '3rem', fontFamily: 'var(--font-outfit)', fontWeight: 800 }}>Our Team</h2>
+          <h2 style={{ fontSize: isMobile ? '2rem' : '3rem', fontFamily: 'var(--font-outfit)', fontWeight: 800 }}>Our Team</h2>
         </motion.div>
         
         <div className="team-grid">
@@ -1642,13 +1733,13 @@ export default function Home() {
       </section>
 
       {/* Process Section */}
-      <section style={{ padding: '128px 0', borderTop: '1px solid rgba(0,0,0,0.03)' }}>
-        <motion.div {...fadeInUp} style={{ marginBottom: '80px' }}>
+      <section style={{ padding: isMobile ? '64px 0' : '128px 0', borderTop: '1px solid rgba(0,0,0,0.03)' }}>
+        <motion.div {...fadeInUp} style={{ marginBottom: isMobile ? '40px' : '80px' }}>
           <p style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.15em', opacity: 0.5, marginBottom: '32px' }}>How We Deliver</p>
-          <h2 style={{ fontSize: '3rem', fontFamily: 'var(--font-outfit)', fontWeight: 800 }}>Our Process</h2>
+          <h2 style={{ fontSize: isMobile ? '2rem' : '3rem', fontFamily: 'var(--font-outfit)', fontWeight: 800 }}>Our Process</h2>
         </motion.div>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)', gap: '2rem' }}>
           {[
             { step: '01', title: 'Consultancy', desc: 'Deep dive into your brand mission and business objectives.' },
             { step: '02', title: 'Strategy', desc: 'Architecting the digital foundation and user journey.' },
@@ -1662,7 +1753,7 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
               style={{
-                padding: '48px 32px',
+                padding: isMobile ? '32px 24px' : '48px 32px',
                 background: 'var(--subtle-bg)',
                 borderRadius: '8px',
                 border: '1px solid var(--card-border)',
@@ -1672,15 +1763,15 @@ export default function Home() {
             >
               <span style={{ 
                 position: 'absolute', 
-                top: '1rem', 
-                right: '1.5rem', 
-                fontSize: '4rem', 
+                top: isMobile ? '0.5rem' : '1rem', 
+                right: isMobile ? '1rem' : '1.5rem', 
+                fontSize: isMobile ? '3rem' : '4rem', 
                 fontWeight: 900, 
                 opacity: 0.15,
                 fontFamily: 'var(--font-outfit)',
                 color: '#FE532D'
               }}>{item.step}</span>
-              <h4 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--text-color)' }}>{item.title}</h4>
+              <h4 style={{ fontSize: isMobile ? '1.25rem' : '1.5rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--text-color)' }}>{item.title}</h4>
               <p style={{ fontSize: '0.95rem', opacity: 0.6, lineHeight: 1.6 }}>{item.desc}</p>
             </motion.div>
           ))}
@@ -1691,25 +1782,31 @@ export default function Home() {
       <section id="contact" style={{ 
         background: '#080810', 
         color: '#fff', 
-        marginLeft: '-6vw', 
-        marginRight: '-6vw', 
-        padding: '128px 6vw',
+        marginLeft: isMobile ? '-5vw' : '-6vw', 
+        marginRight: isMobile ? '-5vw' : '-6vw', 
+        padding: isMobile ? '64px 5vw' : '128px 6vw',
         borderBottom: 'none',
         position: 'relative',
         overflow: 'hidden'
       }}>
         <StarField />
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '64px', position: 'relative', zIndex: 2 }}>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(12, 1fr)', 
+          gap: isMobile ? '48px' : '64px', 
+          position: 'relative', 
+          zIndex: 2 
+        }}>
           {/* Left Side: Info */}
-          <div style={{ gridColumn: '1 / 6' }}>
+          <div style={{ gridColumn: isMobile ? 'span 12' : '1 / 6' }}>
             <motion.h2 
               {...fadeInUp}
               className="serif italic" 
-              style={{ textTransform: 'none', fontSize: '3rem', color: '#fff', marginBottom: '32px' }}
+              style={{ textTransform: 'none', fontSize: isMobile ? '2.25rem' : '3rem', color: '#fff', marginBottom: '32px' }}
             >
               Let&apos;s build something <br /> extraordinary.
             </motion.h2>
-            <motion.p {...fadeInUp} style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.125rem', marginBottom: '48px', lineHeight: 1.6 }}>
+            <motion.p {...fadeInUp} style={{ color: 'rgba(255,255,255,0.85)', fontSize: isMobile ? '1rem' : '1.125rem', marginBottom: '48px', lineHeight: 1.6 }}>
               Share your vision with us. Our team will respond within 24 hours with a tailored strategy.
             </motion.p>
             
@@ -1727,7 +1824,7 @@ export default function Home() {
           </div>
 
           {/* Right Side: Form */}
-          <div style={{ gridColumn: '7 / 13' }}>
+          <div style={{ gridColumn: isMobile ? 'span 12' : '7 / 13' }}>
             {submitted ? (
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -1839,7 +1936,11 @@ export default function Home() {
 
                 <div style={{ marginTop: '2rem' }}>
                   <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Choose your interests</p>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
+                    gap: '1rem' 
+                  }}>
                     {['Branding & Identity', 'Website & Product UI', 'Presentation Design', 'Marketing Material', 'Other'].map((item) => (
                       <label key={item} style={{ display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', fontSize: '1rem' }}>
                         <input 
@@ -1885,18 +1986,19 @@ export default function Home() {
                   } : {}}
                   transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                   style={{ 
-                    alignSelf: 'flex-start', 
+                    alignSelf: isMobile ? 'stretch' : 'flex-start', 
                     color: '#fff', 
                     fontSize: '1.1rem', 
                     fontWeight: 600,
                     letterSpacing: '0.1em',
-                    padding: '1.2rem 4rem',
+                    padding: isMobile ? '1.2rem 2rem' : '1.2rem 4rem',
                     cursor: isSubmitting ? 'not-allowed' : 'pointer',
                     background: 'var(--accent-gradient)',
                     border: 'none',
                     borderRadius: '0px',
                     pointerEvents: 'auto',
-                    opacity: isSubmitting ? 0.7 : 1
+                    opacity: isSubmitting ? 0.7 : 1,
+                    textAlign: 'center'
                   }}
                 >
                   {isSubmitting ? 'SENDING...' : 'SUBMIT ENQUIRY'}
@@ -1968,7 +2070,14 @@ export default function Home() {
         </div>
 
         {/* Footer Grid */}
-        <div style={{ padding: '4rem 6vw', display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '3rem', position: 'relative', zIndex: 2 }}>
+        <div style={{ 
+          padding: isMobile ? '4rem 5vw' : '4rem 6vw', 
+          display: 'grid', 
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)', 
+          gap: '3rem', 
+          position: 'relative', 
+          zIndex: 2 
+        }}>
           
           {/* Col 1: Contact */}
           <div>
