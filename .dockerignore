@@ -1,0 +1,26 @@
+# Build Context
+.git
+.gitignore
+node_modules
+**/node_modules
+.DS_Store
+
+# Frontend
+frontend/.next
+frontend/out
+frontend/build
+frontend/dist
+frontend/.env*.local
+frontend/.vercel
+
+# Backend
+backend
+
+# Other
+logo
+planning
+ui-design
+pencil.md
+README.md
+Dockerfile
+.dockerignore
