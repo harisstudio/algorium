@@ -16,40 +16,40 @@ const Contact3DAnimation = () => {
 
     let w = canvas.width = 600;
     let h = canvas.height = 600;
-    
+
     // Group 1: Planet Points
     const planetPoints: { x: number, y: number, z: number, color: string }[] = [];
     const planetCount = 400;
     const planetRadius = 110;
     for (let i = 0; i < planetCount; i++) {
-        const phi = Math.acos(-1 + (2 * i) / planetCount);
-        const theta = Math.sqrt(planetCount * Math.PI) * phi;
-        planetPoints.push({
-            x: planetRadius * Math.cos(theta) * Math.sin(phi),
-            y: planetRadius * Math.sin(theta) * Math.sin(phi),
-            z: planetRadius * Math.cos(phi),
-            color: `rgba(255, 255, 255, ${0.1 + Math.random() * 0.3})`
-        });
+      const phi = Math.acos(-1 + (2 * i) / planetCount);
+      const theta = Math.sqrt(planetCount * Math.PI) * phi;
+      planetPoints.push({
+        x: planetRadius * Math.cos(theta) * Math.sin(phi),
+        y: planetRadius * Math.sin(theta) * Math.sin(phi),
+        z: planetRadius * Math.cos(phi),
+        color: `rgba(255, 255, 255, ${0.1 + Math.random() * 0.3})`
+      });
     }
 
     // Group 2: Saturn Rings
     const ringPoints: { x: number, y: number, z: number }[] = [];
     const ringCount = 350;
     for (let i = 0; i < ringCount; i++) {
-        const r = 160 + Math.random() * 70;
-        const angle = Math.random() * Math.PI * 2;
-        ringPoints.push({
-            x: Math.cos(angle) * r,
-            y: (Math.random() - 0.5) * 6, // Thin ring depth
-            z: Math.sin(angle) * r
-        });
+      const r = 160 + Math.random() * 70;
+      const angle = Math.random() * Math.PI * 2;
+      ringPoints.push({
+        x: Math.cos(angle) * r,
+        y: (Math.random() - 0.5) * 6, // Thin ring depth
+        z: Math.sin(angle) * r
+      });
     }
 
     // Group 3: Spacecrafts
     const ships = [
-        { angle: 0, r: 260, speed: 0.015, offsetZ: 30 },
-        { angle: Math.PI, r: 300, speed: 0.01, offsetZ: -40 },
-        { angle: Math.PI / 2, r: 220, speed: 0.02, offsetZ: 0 }
+      { angle: 0, r: 260, speed: 0.015, offsetZ: 30 },
+      { angle: Math.PI, r: 300, speed: 0.01, offsetZ: -40 },
+      { angle: Math.PI / 2, r: 220, speed: 0.02, offsetZ: 0 }
     ];
 
     let rotX = 0.5; // Tilted view
@@ -106,18 +106,18 @@ const Contact3DAnimation = () => {
 
         ctx.beginPath();
         if (p.type === 'ship') {
-            ctx.arc(px, py, 4 * perspective, 0, Math.PI * 2);
-            ctx.fillStyle = '#FE532D';
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = '#FE532D';
+          ctx.arc(px, py, 4 * perspective, 0, Math.PI * 2);
+          ctx.fillStyle = '#FE532D';
+          ctx.shadowBlur = 20;
+          ctx.shadowColor = '#FE532D';
         } else if (p.type === 'ring') {
-            ctx.arc(px, py, 1 * perspective, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${0.05 + alpha * 0.25})`;
-            ctx.shadowBlur = 0;
+          ctx.arc(px, py, 1 * perspective, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${0.05 + alpha * 0.25})`;
+          ctx.shadowBlur = 0;
         } else {
-            ctx.arc(px, py, 1.5 * perspective, 0, Math.PI * 2);
-            ctx.fillStyle = p.color;
-            ctx.shadowBlur = 0;
+          ctx.arc(px, py, 1.5 * perspective, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.shadowBlur = 0;
         }
         ctx.fill();
         ctx.shadowBlur = 0;
@@ -132,14 +132,14 @@ const Contact3DAnimation = () => {
 
   return (
     <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center', width: '100%', maxWidth: '600px' }}>
-      <canvas 
-        ref={canvasRef} 
-        style={{ 
-          width: '100%', 
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: '100%',
           aspectRatio: '1',
           maskImage: 'radial-gradient(circle, black 50%, transparent 80%)',
           WebkitMaskImage: 'radial-gradient(circle, black 50%, transparent 80%)'
-        }} 
+        }}
       />
     </div>
   );
@@ -149,7 +149,7 @@ const StarField = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const scrollYRef = useRef(0);
   const prevScrollRef = useRef(0);
-  const starsRef = useRef<{x: number, y: number, z: number, size: number, opacity: number}[]>([]);
+  const starsRef = useRef<{ x: number, y: number, z: number, size: number, opacity: number }[]>([]);
   const frameRef = useRef<number>(0);
   const warpRef = useRef(0);
 
@@ -285,9 +285,9 @@ const ImageSwitcher = ({ isMobile }: { isMobile?: boolean }) => {
   }, [images.length]);
 
   return (
-    <div style={{ 
-      width: isMobile ? '100%' : '650px', 
-      height: isMobile ? '280px' : '400px', 
+    <div style={{
+      width: isMobile ? '100%' : '650px',
+      height: isMobile ? '280px' : '400px',
       position: 'relative',
       userSelect: 'none',
       pointerEvents: 'none',
@@ -297,24 +297,24 @@ const ImageSwitcher = ({ isMobile }: { isMobile?: boolean }) => {
         <motion.div
           key={index}
           initial={{ opacity: 0, scale: 0.8, y: 30, rotate: -5 }}
-          animate={{ 
-            opacity: 1, 
-            scale: index === 0 ? 1.15 : 1, 
-            y: index === 0 ? 20 : 0, 
-            rotate: 0 
+          animate={{
+            opacity: 1,
+            scale: index === 0 ? 1.15 : 1,
+            y: index === 0 ? 20 : 0,
+            rotate: 0
           }}
           exit={{ opacity: 0, scale: 1.1, y: -30, rotate: 5 }}
-          transition={{ 
-            duration: 1.5, 
-            ease: [0.23, 1, 0.32, 1] 
+          transition={{
+            duration: 1.5,
+            ease: [0.23, 1, 0.32, 1]
           }}
           style={{ position: 'absolute', width: '100%', height: '100%' }}
         >
-          <Image 
-            src={images[index]} 
-            alt="Algorium Collection" 
-            fill 
-            style={{ objectFit: 'contain' }} 
+          <Image
+            src={images[index]}
+            alt="Algorium Collection"
+            fill
+            style={{ objectFit: 'contain' }}
             priority
           />
         </motion.div>
@@ -350,11 +350,11 @@ const AnalogClock = ({ city, timeZone, isMobile }: { city: string, timeZone: str
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: isMobile ? '0.4rem' : '0.6rem' }}>
-      <div style={{ 
-        width: isMobile ? '50px' : '60px', 
-        height: isMobile ? '50px' : '60px', 
-        borderRadius: '50%', 
-        border: '1.5px solid var(--card-border)', 
+      <div style={{
+        width: isMobile ? '50px' : '60px',
+        height: isMobile ? '50px' : '60px',
+        borderRadius: '50%',
+        border: '1.5px solid var(--card-border)',
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
@@ -375,7 +375,7 @@ const AnalogClock = ({ city, timeZone, isMobile }: { city: string, timeZone: str
           }} />
         ))}
         {/* Hour Hand — thick, short, tapered */}
-        <div style={{ 
+        <div style={{
           position: 'absolute',
           width: '2.5px',
           height: isMobile ? '12px' : '15px',
@@ -387,7 +387,7 @@ const AnalogClock = ({ city, timeZone, isMobile }: { city: string, timeZone: str
           zIndex: 2
         }} />
         {/* Minute Hand — thinner, longer */}
-        <div style={{ 
+        <div style={{
           position: 'absolute',
           width: '1.5px',
           height: isMobile ? '18px' : '22px',
@@ -399,7 +399,7 @@ const AnalogClock = ({ city, timeZone, isMobile }: { city: string, timeZone: str
           zIndex: 2
         }} />
         {/* Second Hand — signature red, with counterweight */}
-        <div style={{ 
+        <div style={{
           position: 'absolute',
           width: '100%',
           height: '100%',
@@ -454,44 +454,44 @@ const SpotlightCard = ({ title, desc, tag, col, isMobile }: any) => {
   const icons: Record<string, React.ReactNode> = {
     s1: (
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="6" width="24" height="28" rx="3" stroke="currentColor" strokeWidth="2.5"/>
-        <circle cx="14" cy="18" r="5" stroke="#FE532D" strokeWidth="2"/>
-        <path d="M2 28L10 22L16 26L24 18" stroke="#FE532D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        <rect x="30" y="2" width="8" height="8" rx="2" fill="#FE532D"/>
-        <rect x="30" y="14" width="8" height="3" rx="1.5" fill="currentColor" opacity="0.2"/>
-        <rect x="30" y="20" width="8" height="3" rx="1.5" fill="currentColor" opacity="0.2"/>
-        <rect x="30" y="26" width="8" height="3" rx="1.5" fill="currentColor" opacity="0.2"/>
+        <rect x="2" y="6" width="24" height="28" rx="3" stroke="currentColor" strokeWidth="2.5" />
+        <circle cx="14" cy="18" r="5" stroke="#FE532D" strokeWidth="2" />
+        <path d="M2 28L10 22L16 26L24 18" stroke="#FE532D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="30" y="2" width="8" height="8" rx="2" fill="#FE532D" />
+        <rect x="30" y="14" width="8" height="3" rx="1.5" fill="currentColor" opacity="0.2" />
+        <rect x="30" y="20" width="8" height="3" rx="1.5" fill="currentColor" opacity="0.2" />
+        <rect x="30" y="26" width="8" height="3" rx="1.5" fill="currentColor" opacity="0.2" />
       </svg>
     ),
     s2: (
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 8L20 4L36 8V18C36 28 28 36 20 38C12 36 4 28 4 18V8Z" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round"/>
-        <path d="M12 20L18 26L28 14" stroke="#FE532D" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M4 8L20 4L36 8V18C36 28 28 36 20 38C12 36 4 28 4 18V8Z" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
+        <path d="M12 20L18 26L28 14" stroke="#FE532D" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
     s4: (
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="20" cy="20" r="17" stroke="currentColor" strokeWidth="2.5"/>
-        <circle cx="20" cy="20" r="6" fill="#FE532D"/>
-        <path d="M20 3V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M20 31V37" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M3 20H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M31 20H37" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M8 8L12 12" stroke="#FE532D" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M28 28L32 32" stroke="#FE532D" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M32 8L28 12" stroke="#FE532D" strokeWidth="2" strokeLinecap="round"/>
-        <path d="M12 28L8 32" stroke="#FE532D" strokeWidth="2" strokeLinecap="round"/>
+        <circle cx="20" cy="20" r="17" stroke="currentColor" strokeWidth="2.5" />
+        <circle cx="20" cy="20" r="6" fill="#FE532D" />
+        <path d="M20 3V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M20 31V37" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M3 20H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M31 20H37" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path d="M8 8L12 12" stroke="#FE532D" strokeWidth="2" strokeLinecap="round" />
+        <path d="M28 28L32 32" stroke="#FE532D" strokeWidth="2" strokeLinecap="round" />
+        <path d="M32 8L28 12" stroke="#FE532D" strokeWidth="2" strokeLinecap="round" />
+        <path d="M12 28L8 32" stroke="#FE532D" strokeWidth="2" strokeLinecap="round" />
       </svg>
     ),
   };
 
   return (
-    <motion.div 
-      style={{ 
-        gridColumn: isMobile ? 'span 12' : col, 
-        position: 'relative', 
-        overflow: 'hidden', 
-        padding: isMobile ? '32px' : '64px', 
+    <motion.div
+      style={{
+        gridColumn: isMobile ? 'span 12' : col,
+        position: 'relative',
+        overflow: 'hidden',
+        padding: isMobile ? '32px' : '64px',
         background: 'var(--card-bg)',
         borderRadius: '12px',
         border: '1px solid var(--card-border)',
@@ -524,33 +524,33 @@ const SpotlightCard = ({ title, desc, tag, col, isMobile }: any) => {
       />
       <div style={{ position: 'relative', zIndex: 2, pointerEvents: 'none' }}>
         {/* Large Icon */}
-        <div style={{ 
-          width: '80px', 
-          height: '80px', 
-          background: 'var(--subtle-bg)', 
-          borderRadius: '24px', 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          marginBottom: '2.5rem', 
+        <div style={{
+          width: '80px',
+          height: '80px',
+          background: 'var(--subtle-bg)',
+          borderRadius: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: '2.5rem',
           border: '1px solid var(--card-border)',
         }}>
           {icons[tag] || icons['s1']}
         </div>
         {/* Title */}
-        <h3 style={{ 
-          fontSize: '1.75rem', 
+        <h3 style={{
+          fontSize: '1.75rem',
           fontFamily: 'var(--font-outfit)',
-          fontWeight: 700, 
-          marginBottom: '1.2rem', 
+          fontWeight: 700,
+          marginBottom: '1.2rem',
           lineHeight: 1.15,
           color: 'var(--text-color)',
           letterSpacing: '-0.01em'
         }} dangerouslySetInnerHTML={{ __html: title }} />
         {/* Description */}
-        <p style={{ 
-          opacity: 0.55, 
-          lineHeight: 1.7, 
+        <p style={{
+          opacity: 0.55,
+          lineHeight: 1.7,
           fontSize: '1rem',
           fontFamily: 'var(--font-inter)',
           fontWeight: 400
@@ -599,54 +599,54 @@ const ProjectRow = ({ project, index, isMobile }: { project: typeof projects[0],
         gap: isMobile ? '1.5rem' : '0'
       }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: isMobile ? '1.5rem' : '3rem' }}>
-          <span style={{ 
-            fontSize: '1rem', 
-            opacity: 0.3, 
+          <span style={{
+            fontSize: '1rem',
+            opacity: 0.3,
             fontFamily: 'var(--font-outfit)',
-            fontWeight: 700 
+            fontWeight: 700
           }}>
             0{index + 1}
           </span>
           <motion.h3
-            animate={{ 
+            animate={{
               x: hovered ? 30 : 0,
               color: hovered ? '#FE532D' : 'var(--text-color)'
             }}
             transition={{ type: 'spring', stiffness: 200, damping: 25 }}
-            style={{ 
-              fontSize: 'clamp(2.5rem, 6vw, 6rem)', 
-              fontWeight: 800, 
-              lineHeight: 1, 
-              letterSpacing: '-0.04em', 
-              margin: 0, 
-              textTransform: 'none' 
+            style={{
+              fontSize: 'clamp(2.5rem, 6vw, 6rem)',
+              fontWeight: 800,
+              lineHeight: 1,
+              letterSpacing: '-0.04em',
+              margin: 0,
+              textTransform: 'none'
             }}
           >
             {project.name}
           </motion.h3>
         </div>
 
-        <div style={{ 
-          display: 'flex', 
-          gap: isMobile ? '1.5rem' : '3rem', 
-          alignItems: 'center', 
-          textAlign: isMobile ? 'left' : 'right' 
+        <div style={{
+          display: 'flex',
+          gap: isMobile ? '1.5rem' : '3rem',
+          alignItems: 'center',
+          textAlign: isMobile ? 'left' : 'right'
         }}>
-          <span style={{ 
-            fontSize: isMobile ? '0.75rem' : '0.85rem', 
-            textTransform: 'uppercase', 
-            letterSpacing: '0.15em', 
-            opacity: 0.4, 
+          <span style={{
+            fontSize: isMobile ? '0.75rem' : '0.85rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.15em',
+            opacity: 0.4,
             fontWeight: 600,
-            display: 'block' 
+            display: 'block'
           }}>
             {project.category}
           </span>
-          <span style={{ 
-            fontSize: isMobile ? '0.75rem' : '0.85rem', 
-            opacity: 0.2, 
+          <span style={{
+            fontSize: isMobile ? '0.75rem' : '0.85rem',
+            opacity: 0.2,
             fontWeight: 600,
-            minWidth: '40px' 
+            minWidth: '40px'
           }}>
             {project.year}
           </span>
@@ -655,20 +655,20 @@ const ProjectRow = ({ project, index, isMobile }: { project: typeof projects[0],
 
       {/* Mobile Project Image - Visible on mobile below title */}
       {isMobile && (
-        <div style={{ 
-          marginTop: '2rem', 
-          width: '100%', 
-          aspectRatio: '4/3', 
-          position: 'relative', 
-          borderRadius: '12px', 
+        <div style={{
+          marginTop: '2rem',
+          width: '100%',
+          aspectRatio: '4/3',
+          position: 'relative',
+          borderRadius: '12px',
           overflow: 'hidden',
           border: '1px solid var(--card-border)'
         }}>
-          <Image 
-            src={project.image} 
-            alt={project.name} 
-            fill 
-            style={{ objectFit: 'cover' }} 
+          <Image
+            src={project.image}
+            alt={project.name}
+            fill
+            style={{ objectFit: 'cover' }}
             priority
           />
         </div>
@@ -697,11 +697,11 @@ const ProjectRow = ({ project, index, isMobile }: { project: typeof projects[0],
               border: '1px solid rgba(255,255,255,0.1)'
             }}
           >
-            <Image 
-              src={project.image} 
-              alt={project.name} 
-              fill 
-              style={{ objectFit: 'cover' }} 
+            <Image
+              src={project.image}
+              alt={project.name}
+              fill
+              style={{ objectFit: 'cover' }}
               priority
             />
           </motion.div>
@@ -714,8 +714,8 @@ const ProjectRow = ({ project, index, isMobile }: { project: typeof projects[0],
 const AppleCard = ({ category, title, image }: { category: string, title: string, image: string }) => {
   return (
     <motion.div
-      whileHover={{ 
-        y: 12, 
+      whileHover={{
+        y: 12,
         boxShadow: '0 40px 80px rgba(0, 0, 0, 0.1)',
         borderColor: '#FE532D'
       }}
@@ -740,11 +740,11 @@ const AppleCard = ({ category, title, image }: { category: string, title: string
         <h3 style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-color)', lineHeight: 1.2, maxWidth: '80%' }} dangerouslySetInnerHTML={{ __html: title }} />
       </div>
       <div style={{ flex: 1, width: '100%', position: 'relative', padding: '0 1.5rem 1.5rem' }}>
-        <div style={{ 
-          position: 'relative', 
-          width: '100%', 
-          height: '100%', 
-          overflow: 'hidden', 
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          overflow: 'hidden',
           borderRadius: '20px',
           background: 'rgba(255,255,255,0.03)',
           border: '1px solid var(--glass-border)',
@@ -766,7 +766,7 @@ const TeamCard = ({ name, role, index }: { name: string, role: string, index: nu
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ 
+      whileHover={{
         y: -12,
         backgroundColor: 'var(--subtle-bg)',
         borderColor: '#FE532D'
@@ -789,31 +789,31 @@ const TeamCard = ({ name, role, index }: { name: string, role: string, index: nu
         minHeight: '180px'
       }}
     >
-      <p style={{ 
-        fontSize: '0.7rem', 
-        textTransform: 'uppercase', 
-        letterSpacing: '0.25em', 
-        opacity: 0.5, 
+      <p style={{
+        fontSize: '0.7rem',
+        textTransform: 'uppercase',
+        letterSpacing: '0.25em',
+        opacity: 0.5,
         color: '#FE532D',
         fontWeight: 700
       }}>
         {role}
       </p>
-      <h4 style={{ 
-        fontSize: '1.4rem', 
-        fontWeight: 800, 
+      <h4 style={{
+        fontSize: '1.4rem',
+        fontWeight: 800,
         color: 'var(--text-color)',
         lineHeight: 1.2,
         fontFamily: 'var(--font-outfit)'
       }}>
         {name}
       </h4>
-      <div style={{ 
-        width: '24px', 
-        height: '2px', 
-        background: '#FE532D', 
+      <div style={{
+        width: '24px',
+        height: '2px',
+        background: '#FE532D',
         marginTop: '1rem',
-        opacity: 0.3 
+        opacity: 0.3
       }} />
     </motion.div>
   );
@@ -833,14 +833,14 @@ const LogoMarquee = () => {
 
   return (
     <div style={{ marginTop: '10rem', borderTop: '1px solid rgba(0,0,0,0.08)', borderBottom: '1px solid rgba(0,0,0,0.08)', padding: '6rem 0', overflow: 'hidden', position: 'relative' }}>
-      <p style={{ 
-        position: 'absolute', 
-        top: '1.5rem', 
-        left: '50%', 
-        transform: 'translateX(-50%)', 
-        fontSize: '0.75rem', 
-        textTransform: 'uppercase', 
-        letterSpacing: '0.5em', 
+      <p style={{
+        position: 'absolute',
+        top: '1.5rem',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        fontSize: '0.75rem',
+        textTransform: 'uppercase',
+        letterSpacing: '0.5em',
         opacity: 0.3,
         fontWeight: 600
       }}>
@@ -892,10 +892,10 @@ const AppleStyleCarousel = () => {
   return (
     <div style={{ marginTop: '5rem', marginLeft: '-6vw', marginRight: '-6vw', paddingLeft: '6vw' }}>
       <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '2.5rem' }}>Get to know Algorium.</h2>
-      <div className="no-scrollbar" style={{ 
-        display: 'flex', 
-        gap: '2rem', 
-        overflowX: 'auto', 
+      <div className="no-scrollbar" style={{
+        display: 'flex',
+        gap: '2rem',
+        overflowX: 'auto',
         paddingRight: '6vw',
         paddingBottom: '2rem',
         scrollSnapType: 'x mandatory'
@@ -967,23 +967,23 @@ export default function Home() {
   // Real System Login
   const handlePortalLogin = async () => {
     console.log("🔐 Attempting login for:", clientData.company);
-    
+
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.algorium.uk';
       const res = await fetch(`${apiUrl}/api/portal/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ company: clientData.company, password: clientData.password }),
         mode: 'cors'
       });
-      
+
       const data = await res.json();
       console.log("📡 API Response:", data);
-      
+
       if (data.success) {
         setUserRole(data.role);
         setPortalStage('dashboard');
-        
+
         if (data.role === 'admin') {
           setActiveTab('Admin');
           fetchAdminData();
@@ -1039,11 +1039,11 @@ export default function Home() {
 
   const fetchAdminData = async () => {
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.algorium.uk';
       const res = await fetch(`${apiUrl}/api/portal/data?role=admin`);
       const data = await res.json();
       setAdminClients(data.clients);
-    } catch (err) { 
+    } catch (err) {
       console.warn("⚠️ Using local client data for Admin view.");
       setAdminClients([
         {
@@ -1062,7 +1062,7 @@ export default function Home() {
 
   const performAdminAction = async (clientId: string, type: string, actionData: any) => {
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.algorium.uk';
       const res = await fetch(`${apiUrl}/api/portal/admin/action`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1072,15 +1072,15 @@ export default function Home() {
       console.log("📡 Action Success:", data);
       showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} updated successfully.`);
       fetchAdminData(); // Refresh
-    } catch (err) { 
+    } catch (err) {
       console.error("Action Error - No Backend:", err);
       // Local simulation for Admin
       showToast(`Simulated: ${type} added (Local Mode)`, 'success');
       if (type === 'invoice') {
-         const updatedClients = adminClients.map(c => 
-           c.id === clientId ? { ...c, invoices: [...c.invoices, actionData] } : c
-         );
-         setAdminClients(updatedClients);
+        const updatedClients = adminClients.map(c =>
+          c.id === clientId ? { ...c, invoices: [...c.invoices, actionData] } : c
+        );
+        setAdminClients(updatedClients);
       }
     }
   };
@@ -1093,7 +1093,7 @@ export default function Home() {
   const handleInterestChange = (item: string) => {
     setFormData(prev => ({
       ...prev,
-      interests: prev.interests.includes(item) 
+      interests: prev.interests.includes(item)
         ? prev.interests.filter(i => i !== item)
         : [...prev.interests, item]
     }));
@@ -1103,7 +1103,7 @@ export default function Home() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.algorium.uk';
       const response = await fetch(`${apiUrl}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1122,7 +1122,7 @@ export default function Home() {
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
-  
+
   const springConfig = { damping: 25, stiffness: 150 };
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
@@ -1170,7 +1170,7 @@ export default function Home() {
       }
       lastScrollY.current = currentY;
     };
-    
+
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
@@ -1188,18 +1188,18 @@ export default function Home() {
     <div className={`container${darkMode ? ' dark' : ''}`} style={{ position: 'relative', background: 'var(--bg-color)', transition: 'background 0.4s ease' }}>
 
       <div className="grid-background" />
-      <motion.div 
-        className="custom-cursor" 
-        style={{ 
-          x: cursorXSpring, 
-          y: cursorYSpring 
-        }} 
+      <motion.div
+        className="custom-cursor"
+        style={{
+          x: cursorXSpring,
+          y: cursorYSpring
+        }}
       />
       {/* Navigation — Fixed White Header */}
-      <nav style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
+      <nav style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         padding: '1rem 6vw',
         background: darkMode ? '#111' : '#fff',
         position: 'fixed',
@@ -1212,11 +1212,11 @@ export default function Home() {
         transition: 'background 0.4s ease, border-color 0.4s ease'
       }}>
         <div style={{ width: '180px' }}>
-          <Image 
-            src="/new-logo.png" 
-            alt="Algorium Logo" 
-            width={160} 
-            height={55} 
+          <Image
+            src="/new-logo.png"
+            alt="Algorium Logo"
+            width={160}
+            height={55}
             style={{ objectFit: 'contain', filter: darkMode ? 'brightness(0) invert(1)' : 'none', transition: 'filter 0.4s ease' }}
             priority
           />
@@ -1224,15 +1224,15 @@ export default function Home() {
 
         {/* Search Bar — Hidden on Mobile */}
         {!isMobile && (
-          <div style={{ 
-            flex: 1, 
-            maxWidth: '400px', 
-            margin: '0 2rem', 
+          <div style={{
+            flex: 1,
+            maxWidth: '400px',
+            margin: '0 2rem',
             position: 'relative',
             display: 'flex',
             alignItems: 'center'
           }}>
-            <input 
+            <input
               type="text"
               placeholder="Search expertise, projects..."
               value={searchQuery}
@@ -1259,14 +1259,14 @@ export default function Home() {
               onFocus={(e) => (e.currentTarget.style.borderColor = '#FE532D')}
               onBlur={(e) => (e.currentTarget.style.borderColor = darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)')}
             />
-            <svg 
-              style={{ position: 'absolute', left: '18px', opacity: darkMode ? 0.8 : 0.4, transition: 'color 0.4s ease' }} 
+            <svg
+              style={{ position: 'absolute', left: '18px', opacity: darkMode ? 0.8 : 0.4, transition: 'color 0.4s ease' }}
               width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={darkMode ? '#FE532D' : 'currentColor'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
             >
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            
+
             <div style={{ position: 'absolute', right: '6px', display: 'flex', gap: '6px' }}>
               <motion.button
                 onClick={() => setShowGame(true)}
@@ -1375,13 +1375,13 @@ export default function Home() {
           </button>
 
           {/* Hamburger — Orange Lines */}
-          <button 
+          <button
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
-            style={{ 
-              background: 'none', 
-              border: 'none', 
-              cursor: 'pointer', 
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
               padding: '0.5rem',
               display: 'flex',
               flexDirection: 'column',
@@ -1441,13 +1441,13 @@ export default function Home() {
                 {/* Mobile Specific Buttons */}
                 {isMobile && (
                   <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
-                    <motion.button 
+                    <motion.button
                       onClick={() => { setShowGame(true); setMenuOpen(false); }}
                       style={{ flex: 1, background: '#FE532D', color: '#fff', border: 'none', borderRadius: '8px', padding: '12px', fontWeight: 800, fontSize: '0.8rem', letterSpacing: '0.1em' }}
                     >
                       GAME
                     </motion.button>
-                    <motion.button 
+                    <motion.button
                       onClick={() => { setShowPortal(true); setMenuOpen(false); }}
                       style={{ flex: 1, background: darkMode ? 'rgba(255,255,255,0.1)' : '#111', color: '#fff', border: 'none', borderRadius: '8px', padding: '12px', fontWeight: 800, fontSize: '0.8rem', letterSpacing: '0.1em' }}
                     >
@@ -1470,11 +1470,11 @@ export default function Home() {
                     initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.06 }}
-                    style={{ 
-                      fontSize: isMobile ? '1.5rem' : '2rem', 
+                    style={{
+                      fontSize: isMobile ? '1.5rem' : '2rem',
                       fontFamily: 'var(--font-outfit)',
                       fontWeight: 700,
-                      textDecoration: 'none', 
+                      textDecoration: 'none',
                       color: darkMode ? '#fff' : '#111',
                       padding: '0.8rem 0',
                       borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'}`,
@@ -1487,8 +1487,8 @@ export default function Home() {
                   </motion.a>
                 ))}
               </div>
-              
-              <motion.div 
+
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
@@ -1534,26 +1534,26 @@ export default function Home() {
 
 
       {/* Hero Section */}
-      <section style={{ 
-        minHeight: '100vh', 
-        display: 'flex', 
-        flexDirection: 'column', 
+      <section style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
-        paddingTop: '120px', 
+        paddingTop: '120px',
         paddingBottom: '60px'
       }}>
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: "circOut" }}
-          style={{ 
-            fontSize: 'clamp(3.5rem, 12vw, 8rem)', 
-            lineHeight: 0.9, 
+          style={{
+            fontSize: 'clamp(3.5rem, 12vw, 8rem)',
+            lineHeight: 0.9,
             letterSpacing: '-0.04em',
             marginBottom: '1rem'
           }}
         >
-          Engineering For <br /> 
+          Engineering For <br />
           The <span style={{ position: 'relative', display: 'inline-block', verticalAlign: 'baseline' }}>
             {/* Hidden spacer to maintain stable width based on the longest slogan */}
             <span className="serif italic" style={{ opacity: 0, pointerEvents: 'none', userSelect: 'none', whiteSpace: 'nowrap' }}>
@@ -1567,8 +1567,8 @@ export default function Home() {
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
                 className="serif italic"
-                style={{ 
-                  color: '#FE532D', 
+                style={{
+                  color: '#FE532D',
                   display: 'inline-block',
                   position: 'absolute',
                   left: 0,
@@ -1582,13 +1582,13 @@ export default function Home() {
             </AnimatePresence>
           </span>
         </motion.h1>
-        
+
         <div style={{ position: 'relative', width: '100%', maxWidth: '1400px', marginTop: '0.5rem' }}>
           <motion.div {...fadeInUp} style={{ maxWidth: '700px' }}>
             <p style={{ fontSize: isMobile ? '1.2rem' : '1.85rem', fontWeight: 500, lineHeight: 1.3, marginBottom: isMobile ? '2rem' : '3rem' }}>
               We design and build bespoke digital ecosystems for brands that refuse to settle for the ordinary.
             </p>
-            
+
             {/* Clocks strictly below the description */}
             <div style={{ display: 'flex', gap: isMobile ? '1.5rem' : '2.5rem', flexWrap: 'wrap', justifyContent: isMobile ? 'center' : 'flex-start' }}>
               <AnalogClock city="Tokyo" timeZone="Asia/Tokyo" isMobile={isMobile} />
@@ -1601,10 +1601,10 @@ export default function Home() {
           </motion.div>
 
           {/* Objects Showcase: Floating on the far right on desktop, below on mobile */}
-          <div style={{ 
-            position: isMobile ? 'relative' : 'absolute', 
-            top: isMobile ? '0' : '50%', 
-            right: isMobile ? '0' : '-4vw', 
+          <div style={{
+            position: isMobile ? 'relative' : 'absolute',
+            top: isMobile ? '0' : '50%',
+            right: isMobile ? '0' : '-4vw',
             transform: isMobile ? 'none' : 'translateY(-50%)',
             pointerEvents: 'none',
             zIndex: 1,
@@ -1620,18 +1620,18 @@ export default function Home() {
         <LogoMarquee />
 
         {/* Scroll Indicator */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2, duration: 1 }}
-          style={{ 
-            position: 'absolute', 
-            bottom: '4rem', 
-            left: 0, 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center', 
-            gap: '1rem' 
+          style={{
+            position: 'absolute',
+            bottom: '4rem',
+            left: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1rem'
           }}
         >
           <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.2em', opacity: 0.4, writingMode: 'vertical-rl' }}>Explore</span>
@@ -1646,7 +1646,7 @@ export default function Home() {
           <h2 style={{ fontSize: isMobile ? '2rem' : '3rem', fontFamily: 'var(--font-outfit)', fontWeight: 800 }}>Expertise</h2>
         </motion.div>
         <div className="line-detail" style={{ opacity: 0.2, marginBottom: isMobile ? '64px' : '128px' }} />
-        
+
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: isMobile ? '2rem' : '4rem' }}>
           <SpotlightCard title="Brand & <br />Product Design" desc="Visual identities and user interfaces that command attention and respect." tag="s1" col="1 / 5" isMobile={isMobile} />
           <SpotlightCard title="High-End <br />Engineering" desc="Scalable web and mobile applications built with precision and edge-ready speed." tag="s2" col="5 / 9" isMobile={isMobile} />
@@ -1672,8 +1672,8 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section style={{ 
-        padding: isMobile ? '64px 0' : '128px 0', 
+      <section style={{
+        padding: isMobile ? '64px 0' : '128px 0',
         background: 'var(--bg-color)',
         borderTop: '1px solid var(--divider)'
       }}>
@@ -1684,18 +1684,18 @@ export default function Home() {
               Our engineering philosophy is built on absolute precision and measurable impact.
             </p>
           </div>
-          <div style={{ 
-            gridColumn: isMobile ? 'span 12' : '6 / 13', 
-            display: 'grid', 
-            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', 
-            gap: '2rem' 
+          <div style={{
+            gridColumn: isMobile ? 'span 12' : '6 / 13',
+            display: 'grid',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+            gap: '2rem'
           }}>
             {[
               { label: 'Successful Launches', value: '140+' },
               { label: 'Global Partners', value: '45' },
               { label: 'Uptime Reliability', value: '99.9%' }
             ].map((stat, i) => (
-              <motion.div 
+              <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -1717,7 +1717,7 @@ export default function Home() {
           <p style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.15em', opacity: 0.5, marginBottom: '32px' }}>The Human Edge</p>
           <h2 style={{ fontSize: isMobile ? '2rem' : '3rem', fontFamily: 'var(--font-outfit)', fontWeight: 800 }}>Our Team</h2>
         </motion.div>
-        
+
         <div className="team-grid">
           {[
             { name: "Alexander Croft", role: "AI Engineering" },
@@ -1742,7 +1742,7 @@ export default function Home() {
           <p style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.15em', opacity: 0.5, marginBottom: '32px' }}>How We Deliver</p>
           <h2 style={{ fontSize: isMobile ? '2rem' : '3rem', fontFamily: 'var(--font-outfit)', fontWeight: 800 }}>Our Process</h2>
         </motion.div>
-        
+
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(4, 1fr)', gap: '2rem' }}>
           {[
             { step: '01', title: 'Consultancy', desc: 'Deep dive into your brand mission and business objectives.' },
@@ -1750,7 +1750,7 @@ export default function Home() {
             { step: '03', title: 'Engineering', desc: 'Writing clean, scalable code with edge-ready performance.' },
             { step: '04', title: 'Deployment', desc: 'Seamless launch and continuous performance optimization.' }
           ].map((item, i) => (
-            <motion.div 
+            <motion.div
               key={i}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -1765,12 +1765,12 @@ export default function Home() {
                 overflow: 'hidden'
               }}
             >
-              <span style={{ 
-                position: 'absolute', 
-                top: isMobile ? '0.5rem' : '1rem', 
-                right: isMobile ? '1rem' : '1.5rem', 
-                fontSize: isMobile ? '3rem' : '4rem', 
-                fontWeight: 900, 
+              <span style={{
+                position: 'absolute',
+                top: isMobile ? '0.5rem' : '1rem',
+                right: isMobile ? '1rem' : '1.5rem',
+                fontSize: isMobile ? '3rem' : '4rem',
+                fontWeight: 900,
                 opacity: 0.15,
                 fontFamily: 'var(--font-outfit)',
                 color: '#FE532D'
@@ -1783,29 +1783,29 @@ export default function Home() {
       </section>
 
       {/* Contact Form Section */}
-      <section id="contact" style={{ 
-        background: '#080810', 
-        color: '#fff', 
-        marginLeft: isMobile ? '-5vw' : '-6vw', 
-        marginRight: isMobile ? '-5vw' : '-6vw', 
+      <section id="contact" style={{
+        background: '#080810',
+        color: '#fff',
+        marginLeft: isMobile ? '-5vw' : '-6vw',
+        marginRight: isMobile ? '-5vw' : '-6vw',
         padding: isMobile ? '64px 5vw' : '128px 6vw',
         borderBottom: 'none',
         position: 'relative',
         overflow: 'hidden'
       }}>
         <StarField />
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(12, 1fr)', 
-          gap: isMobile ? '48px' : '64px', 
-          position: 'relative', 
-          zIndex: 2 
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(12, 1fr)',
+          gap: isMobile ? '48px' : '64px',
+          position: 'relative',
+          zIndex: 2
         }}>
           {/* Left Side: Info */}
           <div style={{ gridColumn: isMobile ? 'span 12' : '1 / 6' }}>
-            <motion.h2 
+            <motion.h2
               {...fadeInUp}
-              className="serif italic" 
+              className="serif italic"
               style={{ textTransform: 'none', fontSize: isMobile ? '2.25rem' : '3rem', color: '#fff', marginBottom: '32px' }}
             >
               Let&apos;s build something <br /> extraordinary.
@@ -1813,7 +1813,7 @@ export default function Home() {
             <motion.p {...fadeInUp} style={{ color: 'rgba(255,255,255,0.85)', fontSize: isMobile ? '1rem' : '1.125rem', marginBottom: '48px', lineHeight: 1.6 }}>
               Share your vision with us. Our team will respond within 24 hours with a tailored strategy.
             </motion.p>
-            
+
             {/* Direct Contact */}
             <motion.div {...fadeInUp} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <a href="mailto:hello@algorium.co.uk" style={{ color: '#FE532D', textDecoration: 'none', fontSize: '1.1rem', fontWeight: 600 }}>
@@ -1822,7 +1822,7 @@ export default function Home() {
               <a href="tel:+442012345678" style={{ color: 'rgba(255,255,255,0.8)', textDecoration: 'none', fontSize: '1rem' }}>
                 +44 20 1234 5678
               </a>
-              
+
               <Contact3DAnimation />
             </motion.div>
           </div>
@@ -1830,14 +1830,14 @@ export default function Home() {
           {/* Right Side: Form */}
           <div style={{ gridColumn: isMobile ? 'span 12' : '7 / 13' }}>
             {submitted ? (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                style={{ 
-                  height: '100%', 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  justifyContent: 'center', 
+                style={{
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
                   alignItems: 'center',
                   textAlign: 'center',
                   gap: '1.5rem',
@@ -1849,7 +1849,7 @@ export default function Home() {
                 <div style={{ fontSize: '3rem' }}>✉️</div>
                 <h3 className="serif italic" style={{ fontSize: '2.5rem', color: '#FE532D' }}>Enquiry Received</h3>
                 <p style={{ opacity: 0.8, fontSize: '1.1rem' }}>Thank you for reaching out. <br />Our specialists will review your application and respond shortly.</p>
-                <button 
+                <button
                   onClick={() => setSubmitted(false)}
                   style={{ background: 'none', border: 'none', borderBottom: '1px solid #fff', color: '#fff', cursor: 'pointer', padding: '0.5rem 0', marginTop: '2rem' }}
                 >
@@ -1859,99 +1859,99 @@ export default function Home() {
             ) : (
               <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
                 <div>
-                  <input 
+                  <input
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    type="text" 
-                    placeholder="Full Name" 
+                    type="text"
+                    placeholder="Full Name"
                     required
-                    style={{ 
-                      width: '100%', 
-                      background: 'transparent', 
-                      border: 'none', 
-                      borderBottom: '1px solid rgba(255,255,255,0.2)', 
+                    style={{
+                      width: '100%',
+                      background: 'transparent',
+                      border: 'none',
+                      borderBottom: '1px solid rgba(255,255,255,0.2)',
                       padding: '1rem 0',
                       color: '#fff',
                       outline: 'none',
                       fontSize: '1.2rem',
                       fontFamily: 'var(--font-inter)'
-                    }} 
+                    }}
                   />
                 </div>
                 <div>
-                  <input 
+                  <input
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    type="email" 
-                    placeholder="Email Address" 
+                    type="email"
+                    placeholder="Email Address"
                     required
-                    style={{ 
-                      width: '100%', 
-                      background: 'transparent', 
-                      border: 'none', 
-                      borderBottom: '1px solid rgba(255,255,255,0.2)', 
+                    style={{
+                      width: '100%',
+                      background: 'transparent',
+                      border: 'none',
+                      borderBottom: '1px solid rgba(255,255,255,0.2)',
                       padding: '1rem 0',
                       color: '#fff',
                       outline: 'none',
                       fontSize: '1.2rem'
-                    }} 
+                    }}
                   />
                 </div>
                 <div>
-                  <input 
+                  <input
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    type="tel" 
-                    placeholder="Phone Number" 
-                    style={{ 
-                      width: '100%', 
-                      background: 'transparent', 
-                      border: 'none', 
-                      borderBottom: '1px solid rgba(255,255,255,0.2)', 
+                    type="tel"
+                    placeholder="Phone Number"
+                    style={{
+                      width: '100%',
+                      background: 'transparent',
+                      border: 'none',
+                      borderBottom: '1px solid rgba(255,255,255,0.2)',
                       padding: '1rem 0',
                       color: '#fff',
                       outline: 'none',
                       fontSize: '1.2rem'
-                    }} 
+                    }}
                   />
                 </div>
                 <div>
-                  <input 
+                  <input
                     name="company"
                     value={formData.company}
                     onChange={handleInputChange}
-                    type="text" 
-                    placeholder="Company Website or LinkedIn" 
-                    style={{ 
-                      width: '100%', 
-                      background: 'transparent', 
-                      border: 'none', 
-                      borderBottom: '1px solid rgba(255,255,255,0.2)', 
+                    type="text"
+                    placeholder="Company Website or LinkedIn"
+                    style={{
+                      width: '100%',
+                      background: 'transparent',
+                      border: 'none',
+                      borderBottom: '1px solid rgba(255,255,255,0.2)',
                       padding: '1rem 0',
                       color: '#fff',
                       outline: 'none',
                       fontSize: '1.2rem'
-                    }} 
+                    }}
                   />
                 </div>
 
                 <div style={{ marginTop: '2rem' }}>
                   <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Choose your interests</p>
-                  <div style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
-                    gap: '1rem' 
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+                    gap: '1rem'
                   }}>
                     {['Branding & Identity', 'Website & Product UI', 'Presentation Design', 'Marketing Material', 'Other'].map((item) => (
                       <label key={item} style={{ display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer', fontSize: '1rem' }}>
-                        <input 
-                          type="checkbox" 
+                        <input
+                          type="checkbox"
                           checked={formData.interests.includes(item)}
                           onChange={() => handleInterestChange(item)}
-                          style={{ accentColor: 'var(--accent-color)' }} 
+                          style={{ accentColor: 'var(--accent-color)' }}
                         />
                         {item}
                       </label>
@@ -1960,16 +1960,16 @@ export default function Home() {
                 </div>
 
                 <div style={{ marginTop: '2rem' }}>
-                  <textarea 
+                  <textarea
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
                     placeholder="Add your project details or questions here..."
-                    style={{ 
-                      width: '100%', 
-                      background: 'transparent', 
-                      border: 'none', 
-                      borderBottom: '1px solid rgba(255,255,255,0.2)', 
+                    style={{
+                      width: '100%',
+                      background: 'transparent',
+                      border: 'none',
+                      borderBottom: '1px solid rgba(255,255,255,0.2)',
                       padding: '1rem 0',
                       color: '#fff',
                       outline: 'none',
@@ -1980,19 +1980,19 @@ export default function Home() {
                   ></textarea>
                 </div>
 
-                <motion.button 
-                  type="submit" 
+                <motion.button
+                  type="submit"
                   disabled={isSubmitting}
-                  whileHover={!isSubmitting ? { 
-                    boxShadow: '0 0 40px rgba(254, 83, 45, 0.5)', 
-                    scale: 1.05, 
-                    filter: 'brightness(1.2)' 
+                  whileHover={!isSubmitting ? {
+                    boxShadow: '0 0 40px rgba(254, 83, 45, 0.5)',
+                    scale: 1.05,
+                    filter: 'brightness(1.2)'
                   } : {}}
                   transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-                  style={{ 
-                    alignSelf: isMobile ? 'stretch' : 'flex-start', 
-                    color: '#fff', 
-                    fontSize: '1.1rem', 
+                  style={{
+                    alignSelf: isMobile ? 'stretch' : 'flex-start',
+                    color: '#fff',
+                    fontSize: '1.1rem',
                     fontWeight: 600,
                     letterSpacing: '0.1em',
                     padding: isMobile ? '1.2rem 2rem' : '1.2rem 4rem',
@@ -2025,7 +2025,7 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer style={{ 
+      <footer style={{
         background: '#080810',
         color: '#fff',
         marginLeft: '-6vw',
@@ -2039,19 +2039,19 @@ export default function Home() {
 
         {/* Footer CTA */}
         <div style={{ padding: '8rem 6vw 6rem', borderBottom: '1px solid rgba(255,255,255,0.08)', position: 'relative', zIndex: 2 }}>
-          <motion.h2 
+          <motion.h2
             {...fadeInUp}
             className="serif italic"
             style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', color: '#fff', textTransform: 'none', marginBottom: '2rem' }}
           >
             Ready to elevate <br />your digital presence?
           </motion.h2>
-          <motion.a 
-            href="#contact" 
-            whileHover={{ 
-              boxShadow: '0 0 40px rgba(254, 83, 45, 0.5)', 
-              scale: 1.05, 
-              filter: 'brightness(1.2)' 
+          <motion.a
+            href="#contact"
+            whileHover={{
+              boxShadow: '0 0 40px rgba(254, 83, 45, 0.5)',
+              scale: 1.05,
+              filter: 'brightness(1.2)'
             }}
             transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             style={{
@@ -2074,15 +2074,15 @@ export default function Home() {
         </div>
 
         {/* Footer Grid */}
-        <div style={{ 
-          padding: isMobile ? '4rem 5vw' : '4rem 6vw', 
-          display: 'grid', 
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)', 
-          gap: '3rem', 
-          position: 'relative', 
-          zIndex: 2 
+        <div style={{
+          padding: isMobile ? '4rem 5vw' : '4rem 6vw',
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)',
+          gap: '3rem',
+          position: 'relative',
+          zIndex: 2
         }}>
-          
+
           {/* Col 1: Contact */}
           <div>
             <p style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.35)', marginBottom: '1.5rem', fontWeight: 700 }}>Contact</p>
@@ -2157,11 +2157,11 @@ export default function Home() {
         </div>
 
         {/* Footer Bottom */}
-        <div style={{ 
+        <div style={{
           padding: '2rem 6vw',
-          borderTop: '1px solid rgba(255,255,255,0.06)', 
-          display: 'flex', 
-          justifyContent: 'space-between', 
+          borderTop: '1px solid rgba(255,255,255,0.06)',
+          display: 'flex',
+          justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '1rem'
@@ -2175,7 +2175,7 @@ export default function Home() {
           <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
             <a href="#" style={{ color: 'rgba(255,255,255,0.35)', textDecoration: 'none', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Privacy Policy</a>
             <a href="#" style={{ color: 'rgba(255,255,255,0.35)', textDecoration: 'none', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Terms</a>
-            <button 
+            <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', padding: '0.6rem 1.2rem', borderRadius: '20px' }}
             >
@@ -2219,7 +2219,7 @@ export default function Home() {
                 boxShadow: '0 30px 60px rgba(0,0,0,0.5)'
               }}
             >
-              <button 
+              <button
                 onClick={() => setShowGame(false)}
                 style={{
                   position: 'absolute',
@@ -2235,25 +2235,25 @@ export default function Home() {
               >
                 ✕
               </button>
-              
+
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', paddingBottom: '0.5rem' }}>
                 <style>{`
                   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
                 `}</style>
-                <Image 
-                  src="/new-logo.png" 
-                  alt="Algorium Logo" 
-                  width={140} 
-                  height={40} 
-                  style={{ 
-                    objectFit: 'contain', 
+                <Image
+                  src="/new-logo.png"
+                  alt="Algorium Logo"
+                  width={140}
+                  height={40}
+                  style={{
+                    objectFit: 'contain',
                     // Filter to convert to #FE532D
-                    filter: 'brightness(0) saturate(100%) invert(48%) sepia(87%) saturate(3015%) hue-rotate(344deg) brightness(101%) contrast(101%)' 
+                    filter: 'brightness(0) saturate(100%) invert(48%) sepia(87%) saturate(3015%) hue-rotate(344deg) brightness(101%) contrast(101%)'
                   }}
                 />
-                <span style={{ 
-                  fontFamily: '"Press Start 2P", system-ui', 
-                  fontSize: '0.8rem', 
+                <span style={{
+                  fontFamily: '"Press Start 2P", system-ui',
+                  fontSize: '0.8rem',
                   color: '#FE532D',
                   paddingTop: '4px'
                 }}>
@@ -2289,12 +2289,12 @@ export default function Home() {
             }}
           >
             {/* Sidebar / Navigation */}
-            <div 
+            <div
               data-lenis-prevent
-              style={{ 
-                width: '280px', 
+              style={{
+                width: '280px',
                 height: '100%',
-                background: darkMode ? '#05050a' : '#f8f8fa', 
+                background: darkMode ? '#05050a' : '#f8f8fa',
                 borderRight: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`,
                 display: 'flex',
                 flexDirection: 'column',
@@ -2303,22 +2303,22 @@ export default function Home() {
               }}
             >
               <div style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '1rem', paddingLeft: '0.5rem' }}>
-                <Image 
-                  src="/new-logo.png" 
-                  alt="Logo" 
-                  width={220} 
-                  height={70} 
-                  style={{ 
-                    width: '140px', 
-                    height: 'auto', 
-                    filter: darkMode ? 'brightness(0) invert(1)' : 'none' 
-                  }} 
+                <Image
+                  src="/new-logo.png"
+                  alt="Logo"
+                  width={220}
+                  height={70}
+                  style={{
+                    width: '140px',
+                    height: 'auto',
+                    filter: darkMode ? 'brightness(0) invert(1)' : 'none'
+                  }}
                 />
               </div>
 
               {/* Google Drive style "NEW" button */}
               <div style={{ position: 'relative', marginBottom: '2.5rem' }}>
-                <button 
+                <button
                   onClick={() => setShowNewMenu(!showNewMenu)}
                   style={{
                     display: 'flex',
@@ -2336,7 +2336,7 @@ export default function Home() {
                     width: 'fit-content'
                   }}
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M12 5v14M5 12h14"/></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M12 5v14M5 12h14" /></svg>
                   NEW
                 </button>
 
@@ -2365,28 +2365,28 @@ export default function Home() {
                         { label: 'New Folder', icon: 'M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z' },
                         { label: 'New Invoice', icon: 'M7 15h0M2 9.5h20', adminOnly: true }
                       ].filter(item => !item.adminOnly || userRole === 'admin').map((item, i) => (
-                        <div 
+                        <div
                           key={i}
                           onClick={() => {
                             setShowNewMenu(false);
                             if (item.label === 'File Upload') {
-                               const newFile = {
-                                  name: prompt('Enter file name', 'New Presentation.pdf') || 'New File.pdf',
-                                  size: '1.2 MB',
-                                  type: 'Document'
-                               };
-                               setDriveFiles([newFile, ...driveFiles]);
+                              const newFile = {
+                                name: prompt('Enter file name', 'New Presentation.pdf') || 'New File.pdf',
+                                size: '1.2 MB',
+                                type: 'Document'
+                              };
+                              setDriveFiles([newFile, ...driveFiles]);
                             } else if (item.label === 'New Folder') {
-                               alert('Feature: Sub-folder creation initialized.');
+                              alert('Feature: Sub-folder creation initialized.');
                             } else if (item.label === 'New Invoice') {
-                               if (activeProject) {
-                                  performAdminAction(activeProject.id, 'invoice', { 
-                                    id: `INV-${Math.floor(Math.random()*900)+100}`, 
-                                    amount: '£1,500', 
-                                    status: 'Pending', 
-                                    date: new Date().toLocaleDateString() 
-                                  });
-                               }
+                              if (activeProject) {
+                                performAdminAction(activeProject.id, 'invoice', {
+                                  id: `INV-${Math.floor(Math.random() * 900) + 100}`,
+                                  amount: '£1,500',
+                                  status: 'Pending',
+                                  date: new Date().toLocaleDateString()
+                                });
+                              }
                             }
                           }}
                           style={{
@@ -2400,7 +2400,7 @@ export default function Home() {
                           }}
                           className="new-menu-item"
                         >
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FE532D" strokeWidth="2"><path d={item.icon}/></svg>
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FE532D" strokeWidth="2"><path d={item.icon} /></svg>
                           {item.label}
                         </div>
                       ))}
@@ -2412,11 +2412,11 @@ export default function Home() {
               <div style={{ marginBottom: '2rem' }}>
                 <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   {[
-                    { name: 'Overview', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
-                    { name: 'Drive Space', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> },
-                    { name: 'Invoices', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h0M2 9.5h20"/></svg> },
-                    { name: 'Notes', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
-                    ...(userRole === 'admin' ? [{ name: 'Admin', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg> }] : [])
+                    { name: 'Overview', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg> },
+                    { name: 'Drive Space', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" /></svg> },
+                    { name: 'Invoices', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M7 15h0M2 9.5h20" /></svg> },
+                    { name: 'Notes', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg> },
+                    ...(userRole === 'admin' ? [{ name: 'Admin', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><polyline points="17 11 19 13 23 9" /></svg> }] : [])
                   ].map(item => (
                     <motion.div
                       key={item.name}
@@ -2444,75 +2444,75 @@ export default function Home() {
               </div>
 
               <div style={{ marginTop: 'auto' }}>
-                 <div style={{ padding: '20px', background: darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)', borderRadius: '20px', marginBottom: '1.5rem', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'}` }}>
-                    <div style={{ fontSize: '0.75rem', opacity: 0.5, marginBottom: '0.8rem', fontWeight: 600 }}>Storage Breakdown</div>
-                    <div style={{ display: 'flex', gap: '4px', height: '6px', borderRadius: '3px', overflow: 'hidden', marginBottom: '1rem' }}>
-                       <div style={{ width: '45%', background: '#FE532D' }} />
-                       <div style={{ width: '25%', background: '#32d74b' }} />
-                       <div style={{ width: '15%', background: 'rgba(255,255,255,0.2)' }} />
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', opacity: 0.4 }}>
-                       <span>● Design</span>
-                       <span>● Assets</span>
-                    </div>
-                 </div>
-                    <div style={{ fontSize: '0.7rem', opacity: 0.4 }}>3.5GB of 5GB used</div>
-                 </div>
-
-                <button 
-                  onClick={() => { setShowPortal(false); setPortalStage('login'); setActiveProject(null); }}
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    background: 'transparent',
-                    border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                    borderRadius: '10px',
-                    color: darkMode ? '#fff' : '#000',
-                    fontSize: '0.85rem',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '10px'
-                  }}
-                >
-                  SIGN OUT
-                </button>
+                <div style={{ padding: '20px', background: darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)', borderRadius: '20px', marginBottom: '1.5rem', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'}` }}>
+                  <div style={{ fontSize: '0.75rem', opacity: 0.5, marginBottom: '0.8rem', fontWeight: 600 }}>Storage Breakdown</div>
+                  <div style={{ display: 'flex', gap: '4px', height: '6px', borderRadius: '3px', overflow: 'hidden', marginBottom: '1rem' }}>
+                    <div style={{ width: '45%', background: '#FE532D' }} />
+                    <div style={{ width: '25%', background: '#32d74b' }} />
+                    <div style={{ width: '15%', background: 'rgba(255,255,255,0.2)' }} />
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', opacity: 0.4 }}>
+                    <span>● Design</span>
+                    <span>● Assets</span>
+                  </div>
+                </div>
+                <div style={{ fontSize: '0.7rem', opacity: 0.4 }}>3.5GB of 5GB used</div>
               </div>
 
+              <button
+                onClick={() => { setShowPortal(false); setPortalStage('login'); setActiveProject(null); }}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  background: 'transparent',
+                  border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                  borderRadius: '10px',
+                  color: darkMode ? '#fff' : '#000',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px'
+                }}
+              >
+                SIGN OUT
+              </button>
+            </div>
+
             {/* Main Content Area */}
-            <div style={{ 
-              flex: 1, 
+            <div style={{
+              flex: 1,
               height: '100vh',
               display: 'flex',
               flexDirection: 'column',
-              background: darkMode ? '#080810' : '#ffffff', 
+              background: darkMode ? '#080810' : '#ffffff',
               position: 'relative',
               overflow: 'hidden'
             }}>
               {portalStage === 'login' ? (
-                <div 
+                <div
                   data-lenis-prevent
                   style={{ flex: 1, overflowY: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                   <div style={{ maxWidth: '400px', width: '100%', textAlign: 'center', padding: '2rem' }}>
                     <h2 style={{ fontSize: '2rem', marginBottom: '1rem', color: darkMode ? '#fff' : '#000' }}>Access Portal</h2>
                     <p style={{ opacity: 0.5, marginBottom: '3rem', color: darkMode ? '#fff' : '#000' }}>Please enter your synchronization credentials.</p>
-                    
-                    <input 
-                      type="text" 
+
+                    <input
+                      type="text"
                       placeholder="Company Name"
                       onChange={(e) => setClientData({ ...clientData, company: e.target.value })}
                       style={{ width: '100%', padding: '18px', background: darkMode ? 'rgba(255,255,255,0.03)' : '#f5f5f7', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '15px', color: darkMode ? '#fff' : '#000', marginBottom: '1.2rem', outline: 'none' }}
                     />
-                    <input 
-                      type="password" 
+                    <input
+                      type="password"
                       placeholder="Access Code"
                       onChange={(e) => setClientData({ ...clientData, password: e.target.value })}
                       style={{ width: '100%', padding: '18px', background: darkMode ? 'rgba(255,255,255,0.03)' : '#f5f5f7', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '15px', color: darkMode ? '#fff' : '#000', marginBottom: '2.5rem', outline: 'none' }}
                     />
-                    
+
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -2524,21 +2524,21 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <div 
+                <div
                   data-lenis-prevent
                   style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}
                 >
                   <div style={{ padding: '4rem 6rem' }}>
                     {/* Header with Active Project Info */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5rem', borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, paddingBottom: '3rem' }}>
-                        <div>
-                          <div style={{ fontSize: '0.8rem', color: '#FE532D', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{activeTab.replace(' Space', '')}</div>
-                          <h1 style={{ fontSize: '3.5rem', fontWeight: 800, color: darkMode ? '#fff' : '#000', margin: 0 }}>{activeProject?.company}</h1>
-                        </div>
-                        <div style={{ textAlign: 'right' }}>
-                          <div style={{ opacity: 0.5, fontSize: '0.85rem', color: darkMode ? '#fff' : '#000' }}>System Status</div>
-                          <div style={{ color: '#32d74b', fontWeight: 700, fontSize: '1.1rem' }}>● SYNCHRONIZED</div>
-                        </div>
+                      <div>
+                        <div style={{ fontSize: '0.8rem', color: '#FE532D', fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{activeTab.replace(' Space', '')}</div>
+                        <h1 style={{ fontSize: '3.5rem', fontWeight: 800, color: darkMode ? '#fff' : '#000', margin: 0 }}>{activeProject?.company}</h1>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ opacity: 0.5, fontSize: '0.85rem', color: darkMode ? '#fff' : '#000' }}>System Status</div>
+                        <div style={{ color: '#32d74b', fontWeight: 700, fontSize: '1.1rem' }}>● SYNCHRONIZED</div>
+                      </div>
                     </div>
 
                     {/* Conditional Tab Rendering */}
@@ -2548,30 +2548,30 @@ export default function Home() {
                           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flex: 1 }}>
                             <h3 style={{ fontSize: '1.5rem', color: darkMode ? '#fff' : '#000', whiteSpace: 'nowrap' }}>Shared Documents</h3>
                             <div style={{ position: 'relative', width: '300px' }}>
-                               <input 
-                                 type="text" 
-                                 placeholder="Search assets..." 
-                                 onChange={(e) => setDriveSearch(e.target.value)}
-                                 style={{ width: '100%', padding: '10px 15px 10px 40px', background: darkMode ? 'rgba(255,255,255,0.03)' : '#f8f8f8', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '10px', color: darkMode ? '#fff' : '#000', fontSize: '0.85rem' }} 
-                               />
-                               <svg style={{ position: 'absolute', left: '12px', top: '10px', opacity: 0.3 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                              <input
+                                type="text"
+                                placeholder="Search assets..."
+                                onChange={(e) => setDriveSearch(e.target.value)}
+                                style={{ width: '100%', padding: '10px 15px 10px 40px', background: darkMode ? 'rgba(255,255,255,0.03)' : '#f8f8f8', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '10px', color: darkMode ? '#fff' : '#000', fontSize: '0.85rem' }}
+                              />
+                              <svg style={{ position: 'absolute', left: '12px', top: '10px', opacity: 0.3 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
                             </div>
                           </div>
                           <button style={{ padding: '12px 28px', background: darkMode ? '#fff' : '#000', color: darkMode ? '#000' : '#fff', borderRadius: '30px', border: 'none', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer' }}>+ UPLOAD ASSETS</button>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '2rem' }}>
                           {driveFiles.filter(f => f.name.toLowerCase().includes(driveSearch.toLowerCase())).map((file: any, i: number) => (
-                             <motion.div 
-                               key={i} 
-                               whileHover={{ y: -5, background: darkMode ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)' }}
-                               style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px', cursor: 'pointer' }}
-                             >
-                               <div style={{ width: '45px', height: '45px', background: 'rgba(254, 83, 45, 0.1)', borderRadius: '12px', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FE532D" strokeWidth="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                               </div>
-                               <div style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: '8px', color: darkMode ? '#fff' : '#000' }}>{file.name}</div>
-                               <div style={{ opacity: 0.4, fontSize: '0.85rem', color: darkMode ? '#fff' : '#000' }}>{file.size} • {file.type}</div>
-                             </motion.div>
+                            <motion.div
+                              key={i}
+                              whileHover={{ y: -5, background: darkMode ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)' }}
+                              style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px', cursor: 'pointer' }}
+                            >
+                              <div style={{ width: '45px', height: '45px', background: 'rgba(254, 83, 45, 0.1)', borderRadius: '12px', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FE532D" strokeWidth="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><polyline points="13 2 13 9 20 9" /></svg>
+                              </div>
+                              <div style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: '8px', color: darkMode ? '#fff' : '#000' }}>{file.name}</div>
+                              <div style={{ opacity: 0.4, fontSize: '0.85rem', color: darkMode ? '#fff' : '#000' }}>{file.size} • {file.type}</div>
+                            </motion.div>
                           ))}
                         </div>
                       </motion.div>
@@ -2586,60 +2586,60 @@ export default function Home() {
 
                         {/* Summary Cards Row */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '4rem' }}>
-                           <div style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px' }}>
-                              <div style={{ opacity: 0.5, fontSize: '0.75rem', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Project Phase</div>
-                              <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#FE532D' }}>{activeProject?.status} Build</div>
-                              <div style={{ marginTop: '0.8rem', fontSize: '0.8rem', opacity: 0.4 }}>Current focus: Core UI/UX Build</div>
-                           </div>
-                           <div style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px' }}>
-                              <div style={{ opacity: 0.5, fontSize: '0.75rem', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Total Progress</div>
-                              <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>{Math.round((activeProject?.timeline.filter((t: any) => t.completed).length / activeProject?.timeline.length) * 100)}%</div>
-                              <div style={{ width: '100%', height: '6px', background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', borderRadius: '3px', marginTop: '1.2rem', overflow: 'hidden' }}>
-                                 <motion.div 
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${(activeProject?.timeline.filter((t: any) => t.completed).length / activeProject?.timeline.length) * 100}%` }}
-                                    style={{ height: '100%', background: '#FE532D' }}
-                                 />
-                              </div>
-                           </div>
-                           <div style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px' }}>
-                              <div style={{ opacity: 0.5, fontSize: '0.75rem', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Next Delivery</div>
-                              <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>{activeProject?.timeline.find((t: any) => !t.completed)?.date || 'Completed'}</div>
-                              <div style={{ marginTop: '0.8rem', fontSize: '0.8rem', opacity: 0.4 }}>Mile: {activeProject?.timeline.find((t: any) => !t.completed)?.task || 'All delivered'}</div>
-                           </div>
+                          <div style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px' }}>
+                            <div style={{ opacity: 0.5, fontSize: '0.75rem', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Project Phase</div>
+                            <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#FE532D' }}>{activeProject?.status} Build</div>
+                            <div style={{ marginTop: '0.8rem', fontSize: '0.8rem', opacity: 0.4 }}>Current focus: Core UI/UX Build</div>
+                          </div>
+                          <div style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px' }}>
+                            <div style={{ opacity: 0.5, fontSize: '0.75rem', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Total Progress</div>
+                            <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>{Math.round((activeProject?.timeline.filter((t: any) => t.completed).length / activeProject?.timeline.length) * 100)}%</div>
+                            <div style={{ width: '100%', height: '6px', background: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', borderRadius: '3px', marginTop: '1.2rem', overflow: 'hidden' }}>
+                              <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: `${(activeProject?.timeline.filter((t: any) => t.completed).length / activeProject?.timeline.length) * 100}%` }}
+                                style={{ height: '100%', background: '#FE532D' }}
+                              />
+                            </div>
+                          </div>
+                          <div style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px' }}>
+                            <div style={{ opacity: 0.5, fontSize: '0.75rem', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Next Delivery</div>
+                            <div style={{ fontSize: '1.4rem', fontWeight: 700 }}>{activeProject?.timeline.find((t: any) => !t.completed)?.date || 'Completed'}</div>
+                            <div style={{ marginTop: '0.8rem', fontSize: '0.8rem', opacity: 0.4 }}>Mile: {activeProject?.timeline.find((t: any) => !t.completed)?.task || 'All delivered'}</div>
+                          </div>
                         </div>
 
                         {/* Main Grid: Timeline + Activity */}
                         <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '3rem' }}>
-                           <div>
-                              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '2.5rem', color: darkMode ? '#fff' : '#000' }}>Recent Activity</h3>
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                  {activeProject?.activityLog && activeProject.activityLog.length > 0 ? activeProject.activityLog.map((log: any) => (
-                                    <div key={log.id} style={{ padding: '1.5rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fff', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'}`, borderRadius: '20px', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                                       <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(254,83,45,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FE532D" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                                       </div>
-                                       <div>
-                                          <div style={{ fontWeight: 600, fontSize: '0.95rem', color: darkMode ? '#fff' : '#000' }}>{log.action}</div>
-                                          <div style={{ fontSize: '0.75rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>{log.date}</div>
-                                       </div>
-                                    </div>
-                                 )) : <div style={{ opacity: 0.3, color: darkMode ? '#fff' : '#000' }}>No recent activity to show.</div>}
-                              </div>
-                           </div>
+                          <div>
+                            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '2.5rem', color: darkMode ? '#fff' : '#000' }}>Recent Activity</h3>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                              {activeProject?.activityLog && activeProject.activityLog.length > 0 ? activeProject.activityLog.map((log: any) => (
+                                <div key={log.id} style={{ padding: '1.5rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fff', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'}`, borderRadius: '20px', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                  <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(254,83,45,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FE532D" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                                  </div>
+                                  <div>
+                                    <div style={{ fontWeight: 600, fontSize: '0.95rem', color: darkMode ? '#fff' : '#000' }}>{log.action}</div>
+                                    <div style={{ fontSize: '0.75rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>{log.date}</div>
+                                  </div>
+                                </div>
+                              )) : <div style={{ opacity: 0.3, color: darkMode ? '#fff' : '#000' }}>No recent activity to show.</div>}
+                            </div>
+                          </div>
 
-                           {/* Secondary Column: Progress Roadmap */}
-                           <div>
-                              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '2.5rem', color: darkMode ? '#fff' : '#000' }}>Roadmap status</h3>
-                              <div style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.01)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px', backdropFilter: 'blur(10px)' }}>
-                                 {activeProject?.projectInfo?.roadmap?.map((step: any, i: number) => (
-                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
-                                       <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: step.status === 'completed' ? '#32d74b' : (step.status === 'current' ? '#FE532D' : 'rgba(255,255,255,0.1)') }} />
-                                       <span style={{ fontSize: '0.9rem', fontWeight: 500, opacity: step.status === 'pending' ? 0.4 : 1 }}>{step.phase}</span>
-                                    </div>
-                                 ))}
-                              </div>
-                           </div>
+                          {/* Secondary Column: Progress Roadmap */}
+                          <div>
+                            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '2.5rem', color: darkMode ? '#fff' : '#000' }}>Roadmap status</h3>
+                            <div style={{ padding: '2rem', background: darkMode ? 'rgba(255,255,255,0.01)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px', backdropFilter: 'blur(10px)' }}>
+                              {activeProject?.projectInfo?.roadmap?.map((step: any, i: number) => (
+                                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: step.status === 'completed' ? '#32d74b' : (step.status === 'current' ? '#FE532D' : 'rgba(255,255,255,0.1)') }} />
+                                  <span style={{ fontSize: '0.9rem', fontWeight: 500, opacity: step.status === 'pending' ? 0.4 : 1 }}>{step.phase}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       </motion.div>
                     )}
@@ -2648,31 +2648,31 @@ export default function Home() {
                       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
                           <h3 style={{ fontSize: '1.5rem', color: darkMode ? '#fff' : '#000' }}>Financial Ledger</h3>
-                          <button 
-                             onClick={() => {
-                                if (userRole === 'admin') {
-                                   performAdminAction(activeProject.id, 'invoice', { 
-                                     id: `INV-${Math.floor(Math.random()*900)+100}`, 
-                                     amount: '£4,500', 
-                                     status: 'Pending', 
-                                     date: new Date().toLocaleDateString() 
-                                   });
-                                   alert('Invoice pushed to client portal.');
-                                } else {
-                                   alert('Contact your Account Manager for billing enquiries.');
-                                }
-                             }} 
-                             style={{ padding: '12px 28px', background: '#FE532D', color: '#fff', borderRadius: '30px', border: 'none', fontWeight: 700, fontSize: '0.85rem' }}>+ NEW INVOICE</button>
+                          <button
+                            onClick={() => {
+                              if (userRole === 'admin') {
+                                performAdminAction(activeProject.id, 'invoice', {
+                                  id: `INV-${Math.floor(Math.random() * 900) + 100}`,
+                                  amount: '£4,500',
+                                  status: 'Pending',
+                                  date: new Date().toLocaleDateString()
+                                });
+                                alert('Invoice pushed to client portal.');
+                              } else {
+                                alert('Contact your Account Manager for billing enquiries.');
+                              }
+                            }}
+                            style={{ padding: '12px 28px', background: '#FE532D', color: '#fff', borderRadius: '30px', border: 'none', fontWeight: 700, fontSize: '0.85rem' }}>+ NEW INVOICE</button>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                           {activeProject?.invoices.map((inv: any, i: number) => (
-                             <div key={i} style={{ padding: '1.5rem 2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'}`, borderRadius: '15px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                               <div style={{ fontWeight: 700, color: '#FE532D' }}>{inv.id}</div>
-                               <div style={{ opacity: 0.5, color: darkMode ? '#fff' : '#000' }}>{inv.date}</div>
-                               <div style={{ fontWeight: 600, fontSize: '1.1rem', color: darkMode ? '#fff' : '#000' }}>{inv.amount}</div>
-                               <div style={{ fontSize: '0.75rem', fontWeight: 800, color: inv.status === 'Paid' ? '#32d74b' : '#FE532D' }}>{inv.status.toUpperCase()}</div>
-                             </div>
-                           ))}
+                          {activeProject?.invoices.map((inv: any, i: number) => (
+                            <div key={i} style={{ padding: '1.5rem 2rem', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)'}`, borderRadius: '15px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                              <div style={{ fontWeight: 700, color: '#FE532D' }}>{inv.id}</div>
+                              <div style={{ opacity: 0.5, color: darkMode ? '#fff' : '#000' }}>{inv.date}</div>
+                              <div style={{ fontWeight: 600, fontSize: '1.1rem', color: darkMode ? '#fff' : '#000' }}>{inv.amount}</div>
+                              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: inv.status === 'Paid' ? '#32d74b' : '#FE532D' }}>{inv.status.toUpperCase()}</div>
+                            </div>
+                          ))}
                         </div>
                       </motion.div>
                     )}
@@ -2680,7 +2680,7 @@ export default function Home() {
                     {activeTab === 'Notes' && (
                       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
                         <h3 style={{ fontSize: '1.5rem', color: darkMode ? '#fff' : '#000', marginBottom: '2rem' }}>Brief Documentation</h3>
-                        <textarea 
+                        <textarea
                           defaultValue={activeProject?.notes}
                           style={{ width: '100%', height: '400px', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fcfcfd', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, borderRadius: '24px', padding: '2.5rem', color: darkMode ? '#fff' : '#000', fontSize: '1.1rem', lineHeight: '1.8', outline: 'none' }}
                         />
@@ -2690,59 +2690,59 @@ export default function Home() {
                     {activeTab === 'Admin' && userRole === 'admin' && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
-                           <div>
-                              <h3 style={{ fontSize: '1.8rem', fontWeight: 800, color: darkMode ? '#fff' : '#000' }}>Agency Manager</h3>
-                              <p style={{ opacity: 0.5, color: darkMode ? '#fff' : '#000' }}>Overview of all client ecosystems and synchronization status.</p>
-                           </div>
-                           <div style={{ display: 'flex', gap: '15px' }}>
-                              <div style={{ padding: '15px 25px', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fff', borderRadius: '15px', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}` }}>
-                                 <div style={{ fontSize: '0.7rem', opacity: 0.5, textTransform: 'uppercase', color: darkMode ? '#fff' : '#000' }}>Active Clients</div>
-                                 <div style={{ fontSize: '1.2rem', fontWeight: 700, color: darkMode ? '#fff' : '#000' }}>{adminClients.length}</div>
-                              </div>
-                           </div>
+                          <div>
+                            <h3 style={{ fontSize: '1.8rem', fontWeight: 800, color: darkMode ? '#fff' : '#000' }}>Agency Manager</h3>
+                            <p style={{ opacity: 0.5, color: darkMode ? '#fff' : '#000' }}>Overview of all client ecosystems and synchronization status.</p>
+                          </div>
+                          <div style={{ display: 'flex', gap: '15px' }}>
+                            <div style={{ padding: '15px 25px', background: darkMode ? 'rgba(255,255,255,0.02)' : '#fff', borderRadius: '15px', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}` }}>
+                              <div style={{ fontSize: '0.7rem', opacity: 0.5, textTransform: 'uppercase', color: darkMode ? '#fff' : '#000' }}>Active Clients</div>
+                              <div style={{ fontSize: '1.2rem', fontWeight: 700, color: darkMode ? '#fff' : '#000' }}>{adminClients.length}</div>
+                            </div>
+                          </div>
                         </div>
 
                         <div style={{ background: darkMode ? 'rgba(255,255,255,0.02)' : '#fff', borderRadius: '24px', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}`, overflow: 'hidden' }}>
-                           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                             <thead>
-                               <tr style={{ borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}` }}>
-                                 <th style={{ padding: '20px', fontSize: '0.8rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>CLIENT</th>
-                                 <th style={{ padding: '20px', fontSize: '0.8rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>PROJECT PROGRESS</th>
-                                 <th style={{ padding: '20px', fontSize: '0.8rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>FILES</th>
-                                 <th style={{ padding: '20px', fontSize: '0.8rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>ACTIONS</th>
-                               </tr>
-                             </thead>
-                             <tbody>
-                               {adminClients.map(client => (
-                                 <tr key={client.id} style={{ borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)'}` }}>
-                                   <td style={{ padding: '20px' }}>
-                                      <div style={{ fontWeight: 600, color: darkMode ? '#fff' : '#000' }}>{client.company}</div>
-                                      <div style={{ fontSize: '0.75rem', opacity: 0.5, color: darkMode ? '#fff' : '#000' }}>{client.projectInfo.name}</div>
-                                   </td>
-                                   <td style={{ padding: '20px' }}>
-                                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                         <div style={{ flex: 1, height: '6px', background: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
-                                            <div style={{ width: `${client.projectInfo.progress}%`, height: '100%', background: '#FE532D' }} />
-                                         </div>
-                                         <span style={{ fontSize: '0.8rem', fontWeight: 700, color: darkMode ? '#fff' : '#000' }}>{client.projectInfo.progress}%</span>
+                          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                            <thead>
+                              <tr style={{ borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}` }}>
+                                <th style={{ padding: '20px', fontSize: '0.8rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>CLIENT</th>
+                                <th style={{ padding: '20px', fontSize: '0.8rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>PROJECT PROGRESS</th>
+                                <th style={{ padding: '20px', fontSize: '0.8rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>FILES</th>
+                                <th style={{ padding: '20px', fontSize: '0.8rem', opacity: 0.4, color: darkMode ? '#fff' : '#000' }}>ACTIONS</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {adminClients.map(client => (
+                                <tr key={client.id} style={{ borderBottom: `1px solid ${darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)'}` }}>
+                                  <td style={{ padding: '20px' }}>
+                                    <div style={{ fontWeight: 600, color: darkMode ? '#fff' : '#000' }}>{client.company}</div>
+                                    <div style={{ fontSize: '0.75rem', opacity: 0.5, color: darkMode ? '#fff' : '#000' }}>{client.projectInfo.name}</div>
+                                  </td>
+                                  <td style={{ padding: '20px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                      <div style={{ flex: 1, height: '6px', background: darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+                                        <div style={{ width: `${client.projectInfo.progress}%`, height: '100%', background: '#FE532D' }} />
                                       </div>
-                                   </td>
-                                   <td style={{ padding: '20px' }}>
-                                      <span style={{ padding: '4px 10px', background: 'rgba(254, 83, 45, 0.1)', color: '#FE532D', borderRadius: '6px', fontSize: '0.8rem' }}>{client.files.length} Files</span>
-                                   </td>
-                                   <td style={{ padding: '20px' }}>
-                                      <div style={{ display: 'flex', gap: '10px' }}>
-                                         <button onClick={() => { setActiveProject(client); setPortalStage('dashboard'); setActiveTab('Overview'); }} style={{ padding: '8px 15px', background: 'transparent', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`, borderRadius: '8px', fontSize: '0.75rem', cursor: 'pointer', color: darkMode ? '#fff' : '#000' }}>View Client</button>
-                                         <button 
-                                            onClick={() => performAdminAction(client.id, 'invoice', { id: `INV-${Math.floor(Math.random()*900)+100}`, amount: '£1,200', status: 'Pending', date: new Date().toLocaleDateString() })}
-                                            style={{ padding: '8px 15px', background: '#FE532D', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}
-                                         >+ Invoice</button>
-                                      </div>
-                                   </td>
-                                 </tr>
-                               ))}
-                             </tbody>
-                           </table>
+                                      <span style={{ fontSize: '0.8rem', fontWeight: 700, color: darkMode ? '#fff' : '#000' }}>{client.projectInfo.progress}%</span>
+                                    </div>
+                                  </td>
+                                  <td style={{ padding: '20px' }}>
+                                    <span style={{ padding: '4px 10px', background: 'rgba(254, 83, 45, 0.1)', color: '#FE532D', borderRadius: '6px', fontSize: '0.8rem' }}>{client.files.length} Files</span>
+                                  </td>
+                                  <td style={{ padding: '20px' }}>
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                      <button onClick={() => { setActiveProject(client); setPortalStage('dashboard'); setActiveTab('Overview'); }} style={{ padding: '8px 15px', background: 'transparent', border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`, borderRadius: '8px', fontSize: '0.75rem', cursor: 'pointer', color: darkMode ? '#fff' : '#000' }}>View Client</button>
+                                      <button
+                                        onClick={() => performAdminAction(client.id, 'invoice', { id: `INV-${Math.floor(Math.random() * 900) + 100}`, amount: '£1,200', status: 'Pending', date: new Date().toLocaleDateString() })}
+                                        style={{ padding: '8px 15px', background: '#FE532D', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}
+                                      >+ Invoice</button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
                         </div>
                       </motion.div>
                     )}
@@ -2779,7 +2779,7 @@ export default function Home() {
               gap: '12px'
             }}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
             {toast.message}
           </motion.div>
         )}
@@ -2791,7 +2791,7 @@ export default function Home() {
 // ── Algorium Boutique Atari (Custom Clean Version) ──
 const BreakoutGame = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -2801,7 +2801,7 @@ const BreakoutGame = () => {
     // --- Configuration ---
     const ORANGE = '#FE532D';
     const BG = '#05050a';
-    
+
     let gameState: 'READY' | 'PLAYING' | 'GAMEOVER' | 'WON' = 'READY';
     let score = 0;
     let lives = 3;
@@ -2847,7 +2847,7 @@ const BreakoutGame = () => {
             h: bHeight,
             active: true,
             // Different opacities for visual depth
-            opacity: 1 - (r * 0.15) 
+            opacity: 1 - (r * 0.15)
           });
         }
       }
@@ -2863,7 +2863,7 @@ const BreakoutGame = () => {
     const onClick = () => {
       if (gameState === 'READY') gameState = 'PLAYING';
       if (gameState === 'GAMEOVER' || gameState === 'WON') {
-        score = 0; lives = 3; level = 1; 
+        score = 0; lives = 3; level = 1;
         ball.x = canvas.width / 2; ball.y = canvas.height - 40;
         ball.dx = 4; ball.dy = -4;
         initBricks();
@@ -2914,7 +2914,7 @@ const BreakoutGame = () => {
       // 3. Draw Paddle
       paddle.x += (paddle.targetX - paddle.x) * paddle.speed;
       paddle.x = Math.max(0, Math.min(canvas.width - paddle.w, paddle.x));
-      
+
       ctx.beginPath();
       ctx.roundRect(paddle.x, paddle.y, paddle.w, paddle.h, 5);
       ctx.fillStyle = ORANGE;
@@ -2977,7 +2977,7 @@ const BreakoutGame = () => {
       ctx.font = 'bold 14px Inter';
       ctx.textAlign = 'left';
       ctx.fillText(`SCORE: ${score}`, 20, 30);
-      
+
       ctx.textAlign = 'right';
       // Drawing Orange Hearts
       const hearts = '🧡'.repeat(lives);
@@ -3015,16 +3015,16 @@ const BreakoutGame = () => {
   }, []);
 
   return (
-    <canvas 
-      ref={canvasRef} 
-      width="500" 
-      height="380" 
-      style={{ 
-        background: '#05050a', 
+    <canvas
+      ref={canvasRef}
+      width="500"
+      height="380"
+      style={{
+        background: '#05050a',
         borderRadius: '24px',
         cursor: 'none',
         boxShadow: '0 0 50px rgba(254, 83, 45, 0.15)'
-      }} 
+      }}
     />
   );
 };
