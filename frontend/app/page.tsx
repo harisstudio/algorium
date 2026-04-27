@@ -969,7 +969,8 @@ export default function Home() {
     console.log("🔐 Attempting login for:", clientData.company);
     
     try {
-      const res = await fetch('http://localhost:3001/api/portal/login', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const res = await fetch(`${apiUrl}/api/portal/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ company: clientData.company, password: clientData.password }),
@@ -1038,7 +1039,8 @@ export default function Home() {
 
   const fetchAdminData = async () => {
     try {
-      const res = await fetch('http://localhost:3001/api/portal/data?role=admin');
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const res = await fetch(`${apiUrl}/api/portal/data?role=admin`);
       const data = await res.json();
       setAdminClients(data.clients);
     } catch (err) { 
@@ -1060,7 +1062,8 @@ export default function Home() {
 
   const performAdminAction = async (clientId: string, type: string, actionData: any) => {
     try {
-      const res = await fetch('http://localhost:3001/api/portal/admin/action', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const res = await fetch(`${apiUrl}/api/portal/admin/action`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clientId, type, data: actionData })
@@ -1100,7 +1103,8 @@ export default function Home() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const response = await fetch('http://localhost:3001/api/contact', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
