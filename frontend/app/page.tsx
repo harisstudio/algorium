@@ -1388,9 +1388,9 @@ export default function Home() {
               gap: '5px',
             }}
           >
-            <motion.span animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 7 : 0 }} style={{ display: 'block', width: '24px', height: '2px', background: '#FE532D', borderRadius: '2px' }} />
-            <motion.span animate={{ opacity: menuOpen ? 0 : 1 }} style={{ display: 'block', width: '24px', height: '2px', background: '#FE532D', borderRadius: '2px' }} />
-            <motion.span animate={{ rotate: menuOpen ? -45 : 0, y: menuOpen ? -7 : 0 }} style={{ display: 'block', width: '24px', height: '2px', background: '#FE532D', borderRadius: '2px' }} />
+            <motion.span animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 7 : 0 }} style={{ display: 'block', width: '24px', height: '2px', background: darkMode ? '#fff' : 'black', borderRadius: '2px', transition: 'background 0.3s ease' }} />
+            <motion.span animate={{ opacity: menuOpen ? 0 : 1 }} style={{ display: 'block', width: '24px', height: '2px', background: darkMode ? '#fff' : 'black', borderRadius: '2px', transition: 'background 0.3s ease' }} />
+            <motion.span animate={{ rotate: menuOpen ? -45 : 0, y: menuOpen ? -7 : 0 }} style={{ display: 'block', width: '24px', height: '2px', background: darkMode ? '#fff' : 'black', borderRadius: '2px', transition: 'background 0.3s ease' }} />
           </button>
         </div>
       </nav>
